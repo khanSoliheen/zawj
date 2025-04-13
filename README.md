@@ -1,50 +1,97 @@
-# Welcome to your Expo app 👋
+# 🕌 Zawj - Islamic Matrimonial App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Zawj** is a modern, elegant, and Shariah-compliant matrimonial application built using React Native + Expo. Designed with a thoughtful UI/UX, the app helps Muslims around the world find compatible partners in a halal and respectful way.
 
-## Get started
+---
 
-1. Install dependencies
+## 📱 Features
 
-   ```bash
-   npm install
-   ```
+- ✅ Clean modern UI with light & dark themes
+- 🌙 Arabic and English support (i18n)
+- 💍 Islamic matchmaking flow
+- 🔒 Secure onboarding, login & profile management
+- 📤 Real-time updates via EAS
+- 🧠 Performance optimized with Bridgeless mode (Fabric + TurboModules)
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## 🚀 Getting Started
 
 ```bash
-npm run reset-project
+# Clone repo
+git clone https://github.com/your-username/zawj.git
+cd zawj
+
+# Install dependencies
+pnpm install
+
+# Run in simulator / device
+pnpm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+For iOS:
+```bash
+pnpm run ios
+```
 
-## Learn more
+For Android:
+```bash
+pnpm run android
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🧪 Linting & Type Safety
 
-## Join the community
+```bash
+pnpm lint             # Lints all code with autofix
+pnpm lint --no-fix    # Only check without fixing
+```
 
-Join our community of developers creating universal apps.
+Includes:
+- Strict TypeScript (`strict: true` in `tsconfig.json`)
+- ESLint with Flat Config (`eslint.config.js`)
+- Husky + lint-staged for pre-commit safety
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 📦 Build & Deploy
+
+```bash
+# EAS Build
+pnpm run eas:build
+
+# EAS Update
+pnpm run eas:update
+```
+
+---
+
+## 🤲 Contributing
+
+Muslim developers welcome! Open an issue or pull request.
+
+```bash
+# Format & lint your code before commit
+pnpm lint
+```
+
+---
+
+## 🧕 About
+
+Zawj is built with love and care to offer a halal alternative in the Muslim matrimonial space. Privacy, clarity, and Shariah-compliance are at its heart.
+
+> "And among His signs is this, that He created for you mates from among yourselves..." — [Qur'an 30:21]
+
+---
+
+## 🧠 Future Plans
+- ✅ Push notifications
+- ✅ Role-based accounts (wali, admin)
+- 🌍 Location-aware recommendations
+- 📄 Shariah filters (mahr, deen level, hijab, etc.)
+
+---
+
+Made with 🤍 by Soliheen

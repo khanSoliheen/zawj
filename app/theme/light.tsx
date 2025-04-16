@@ -1,10 +1,15 @@
-const light = {
-  mode: 'light',
-  background: '#F9F8F1', // Soft cream background
-  text: '#333333',        // Deep gray for content
-  primary: '#3A6351',     // Islamic green tone for buttons/headings
-  accent: '#E9D985',      // Subtle gold/beige for highlights
-  border: '#DDD',         // Light borders if needed
+export const light = {
+  background: '#f6f1ea', // dawn-pink
+  text: '#1a1b1d',       // shark (used for text on light bg)
+  primary: '#5f795f',     // cactus
+  secondary: '#8da188',   // envy
+  accent: '#73826d',      // camouflage-green
+  highlight: '#c8a13a',   // old-gold
+  border: '#918c94',      // mountain-mist
+  muted: '#5b545c',       // mortar
+  card: '#ffffff',
+  button: {
+    background: '#5f795f',
+    text: '#fdfefd',
+  },
 };
-
-export default light;

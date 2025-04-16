@@ -1,5 +1,10 @@
 {
   "welcome": "مرحبًا بك في زوج",
   "intro": "منصة زواج قائمة على القيم الإسلامية.",
-  "get_started": "ابدأ"
+  "find_your_life_partner": "ابحث عن شريك حياتك",
+  "how_it_works": "كيف يعمل",
+  "button": {
+    "learn_more": "يتعلم أكثر",
+    "get_started": "ابدأ"
+  }
 }

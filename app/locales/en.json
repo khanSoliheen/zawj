@@ -1,5 +1,11 @@
 {
   "welcome": "Welcome to Zawj",
   "intro": "A matrimonial platform built on Islamic values.",
-  "get_started": "Get Started"
+  "get_started": "Get Started",
+  "find_your_life_partner": "Find Your Life Partner",
+  "how_it_works": "How It Works",
+  "button": {
+    "learn_more": "Learn More",
+    "get_started": "Get Started"
+  }
 }

@@ -1,6 +1,7 @@
 import { Slot } from 'expo-router';
-import { ThemeProvider } from './theme/context';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { ThemeProvider } from './theme/context';
 import './i18n';
 
 export default function Layout() {

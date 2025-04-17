@@ -1,8 +1,11 @@
 // app/welcome.tsx
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { useTheme } from './theme/useTheme';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+
+import logo from '@/assets/images/logo.png';
+
+import { useTheme } from './theme/useTheme';
 
 export default function Welcome() {
   const theme = useTheme();
@@ -12,7 +15,7 @@ export default function Welcome() {
       {/* Logo */}
       <Image
         style={styles.tinyLogo}
-        source={require('@/assets/images/logo.png')}
+        source={logo}
       />
       {/* Tagline */}
       <Text style={{ ...styles.tagline, color: theme.text }}>{t('find_your_life_partner')}</Text>

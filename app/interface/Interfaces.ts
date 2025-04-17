@@ -5,3 +5,14 @@ export interface LanguageDetectorPlugin {
   init: () => void;
   cacheUserLanguage: (_: string) => void;
 }
+
+
+export interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  gender: 'male' | 'female';
+  dateOfBirth: string;
+  password: string;
+  confirmPassword: string;
+}

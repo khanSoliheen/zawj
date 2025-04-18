@@ -9,6 +9,7 @@ export const commonStyles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 8,
     marginLeft: 4,
+    marginTop: 12
   },
 });
 

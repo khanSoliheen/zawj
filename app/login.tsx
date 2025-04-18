@@ -1,11 +1,12 @@
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 
 import logo from "@/assets/images/logo.png";
 
+import Input from './components/input';
 import { useThemeContext } from './theme/context';
 
 interface LoginFormData {
@@ -38,48 +39,21 @@ export default function Login() {
       <Image style={styles.logo} source={logo} />
 
       {/* Email Field */}
-      <Controller
-        control={control}
+      <Input control={control}
         name="email"
-        rules={{
-          required: 'Email is required',
-          pattern: {
-            value: /^\S+@\S+$/i,
-            message: 'Invalid email format',
-          },
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder={t('login_page.email')}
-            value={value}
-            placeholderTextColor={theme.muted}
-            style={[styles.input, { borderColor: theme.border, color: theme.text }]}
-            onChangeText={onChange}
-          />
-        )}
+        error={errors.email}
+        placeholder={t('login_page.email')}
+        email={true}
+        required={true}
       />
-      {errors.email && <Text style={[styles.errorText]}>{errors.email.message}</Text>}
-
       {/* Password Field */}
-      <Controller
-        control={control}
+      <Input control={control}
         name="password"
-        rules={{
-          required: 'Password is required',
-          minLength: { value: 6, message: 'Minimum 6 characters' },
-        }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder={t('login_page.password')}
-            value={value}
-            secureTextEntry
-            placeholderTextColor={theme.muted}
-            style={[styles.input, { borderColor: theme.border, color: theme.text }]}
-            onChangeText={onChange}
-          />
-        )}
+        error={errors.password}
+        placeholder={t('login_page.password')}
+        secureTextEntry={true}
+        required={true}
       />
-      {errors.password && <Text style={[styles.errorText]}>{errors.password.message}</Text>}
 
       <TouchableOpacity
         style={[

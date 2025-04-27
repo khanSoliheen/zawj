@@ -6,8 +6,8 @@ import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 
 import logo from "@/assets/images/logo.png";
 
-import { useThemeContext } from '../theme/context';
 import Input from '../components/input';
+import { useThemeContext } from '../theme/context';
 
 interface LoginFormData {
   email: string;

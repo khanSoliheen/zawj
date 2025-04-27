@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Link } from 'expo-router';
 import { useExpoRouter } from 'expo-router/build/global-state/router-store';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
@@ -20,8 +22,7 @@ import { commonStyles, showToaster } from '@/app/common/commonUtils';
 import { useThemeContext } from '@/app/theme/context';
 
 
-import { Link } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 import Input from '../components/input';
 import { RegisterFormData } from '../interface/Interfaces';
 

@@ -20,13 +20,17 @@ import { commonStyles, showToaster } from '@/app/common/commonUtils';
 import { useThemeContext } from '@/app/theme/context';
 
 
-import { RegisterFormData } from './interface/Interfaces';
+import { Link } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import Input from '../components/input';
+import { RegisterFormData } from '../interface/Interfaces';
 
 
 
 export default function Register() {
   const router = useExpoRouter();
   const { theme } = useThemeContext();
+  const { t } = useTranslation();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const {
     control,
@@ -57,6 +61,13 @@ export default function Register() {
         <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
           <Text style={styles.header}>Register</Text>
 
+          <Input
+            name="firstName"
+            control={control}
+            placeholder="First Name"
+            error={errors.firstName}
+          />
+          <View style={[commonStyles.formInputView]}>
           {/* First Name */}
           <Controller
             name="firstName"
@@ -72,7 +83,9 @@ export default function Register() {
               />
             )}
           />
-          {errors.firstName && <Text style={[commonStyles.errorText]}>{errors.firstName.message}</Text>}
+            {errors.firstName && <Text style={[commonStyles.errorText]}>{errors.firstName.message}</Text>}
+          </View>
+          <View style={[commonStyles.formInputView]}>
           {/* Last Name */}
           <Controller
             name="lastName"
@@ -88,7 +101,9 @@ export default function Register() {
               />
             )}
           />
-          {errors.lastName && <Text style={[commonStyles.errorText]}>{errors.lastName.message}</Text>}
+            {errors.lastName && <Text style={[commonStyles.errorText]}>{errors.lastName.message}</Text>}
+          </View>
+          <View style={[commonStyles.formInputView]}>
           {/* Email */}
           <Controller
             name="email"
@@ -110,7 +125,10 @@ export default function Register() {
               />
             )}
           />
-          {errors.email && <Text style={[commonStyles.errorText]}>{errors.email.message}</Text>}
+            {errors.email && <Text style={[commonStyles.errorText]}>{errors.email.message}</Text>}
+          </View>
+          <View style={[commonStyles.formInputView]}>
+
           {/* Gender */}
           <Controller
             name="gender"
@@ -133,7 +151,9 @@ export default function Register() {
               </View>
             )}
           />
-          {errors.gender && <Text style={[commonStyles.errorText]}>{errors.gender.message}</Text>}
+            {errors.gender && <Text style={[commonStyles.errorText]}>{errors.gender.message}</Text>}
+          </View>
+          <View style={[commonStyles.formInputView]}>
           {/* Date of Birth */}
           <Controller
             name="dateOfBirth"
@@ -164,7 +184,9 @@ export default function Register() {
               </TouchableOpacity>
             )}
           />
-          {errors.dateOfBirth && <Text style={[commonStyles.errorText]}>{errors.dateOfBirth.message}</Text>}
+            {errors.dateOfBirth && <Text style={[commonStyles.errorText]}>{errors.dateOfBirth.message}</Text>}
+          </View>
+          <View style={[commonStyles.formInputView]}>
           {/* Password */}
           <Controller
             name="password"
@@ -196,6 +218,8 @@ export default function Register() {
           {errors.password && (
             <Text style={commonStyles.errorText}>{errors.password.message}</Text>
           )}
+          </View>
+          <View style={[commonStyles.formInputView]}>
 
           {/* Confirm Password */}
           <Controller
@@ -227,10 +251,14 @@ export default function Register() {
           />
           {errors.confirmPassword && (
             <Text style={commonStyles.errorText}>{errors.confirmPassword.message}</Text>
-          )}
+            )}
+            </View>
           <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.submitButton}>
-            <Text style={{ color: 'white' }}>Register</Text>
+            <Text style={{ color: 'white' }}>{t('register_page.button.register')}</Text>
           </TouchableOpacity>
+          <Link href="/" asChild>
+            <Text style={{ padding: 20 }}>{t('register_page.backToLogin')}</Text>
+          </Link>
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -252,7 +280,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    marginBottom: 15,
+    // marginBottom: 15,
   },
   genderContainer: {
     flexDirection: 'row',

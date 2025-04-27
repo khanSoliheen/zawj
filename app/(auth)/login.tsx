@@ -6,8 +6,8 @@ import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 
 import logo from "@/assets/images/logo.png";
 
-import Input from './components/input';
-import { useThemeContext } from './theme/context';
+import { useThemeContext } from '../theme/context';
+import Input from '../components/input';
 
 interface LoginFormData {
   email: string;
@@ -31,11 +31,11 @@ export default function Login() {
   });
 
   const onSubmit = (_: LoginFormData) => {
-    router.push('/');
+    router.push('/home');
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container]}>
       <Image style={styles.logo} source={logo} />
 
       {/* Email Field */}

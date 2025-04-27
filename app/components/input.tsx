@@ -28,7 +28,7 @@ export default function Input({ name, control, label, error, secureTextEntry, re
         name={name}
         control={control}
         rules={{
-          ...(required && { required: `This is required field` }),
+          ...(required && { required: `This is a required field` }),
           ...(email && {
             pattern: {
               value: /^\S+@\S+$/i,

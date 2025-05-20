@@ -2,11 +2,11 @@ import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 
 import logo from "@/assets/images/logo.png";
 
-import Input from '../components/input';
+import { Input, CustomButton } from '../components';
 import { useThemeContext } from '../theme/context';
 
 interface LoginFormData {
@@ -55,17 +55,11 @@ export default function Login() {
         required={true}
       />
 
-      <TouchableOpacity
-        style={[
-          styles.LoginButton,
-          { backgroundColor: theme.highlight, borderColor: theme.highlight },
-        ]}
+      <CustomButton
         onPress={handleSubmit(onSubmit)}
-      >
-        <Text style={[styles.outlineButtonText, { color: theme.button.text }]}>
-          {t('login_page.button.text')}
-        </Text>
-      </TouchableOpacity>
+        title={t('login_page.button.text')}
+        variant="primary"
+      />
 
       <Link href="./register" asChild>
         <Text style={{ ...styles.registerLink, color: theme.accent }}>{t('login_page.register')}</Text>
@@ -84,18 +78,6 @@ const styles = StyleSheet.create({
     height: 300,
     alignSelf: 'center',
     marginBottom: 20,
-  },
-  LoginButton: {
-    height: 45,
-    borderWidth: 1,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  outlineButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   registerLink: {
     textAlign: 'center',

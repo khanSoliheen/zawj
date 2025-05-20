@@ -7,5 +7,19 @@
   "button": {
     "learn_more": "Learn More",
     "get_started": "Get Started"
+  },
+  "login_page" : {
+    "email": "Enter Your Email",
+    "password": "Enter Your Password",
+    "register": "Register here",
+    "button" : {
+      "text": "Login"
+    }
+  },
+  "register_page": {
+    "backToLogin": "Back To Login",
+    "button": {
+      "register": "Register"
+    }
   }
 }

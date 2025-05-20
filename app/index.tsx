@@ -26,6 +26,12 @@ export default function Welcome() {
           <Text style={{ ...styles.outlineButtonText, color: theme.button.text }}>{t('button.get_started')}</Text>
         </TouchableOpacity>
       </Link>
+      <Link style={{margin:10}} href="./home" asChild>
+        <TouchableOpacity style={{ ...styles.primaryButton, backgroundColor: theme.button.background, borderColor: theme.text }}>
+          <Text style={{ ...styles.outlineButtonText, color: theme.button.text }}>Straight To Home</Text>
+        </TouchableOpacity>
+      </Link>
+
 
       {/* How It Works */}
       <Text style={{ ...styles.sectionTitle, color: theme.text }}>{t('how_it_works')}</Text>

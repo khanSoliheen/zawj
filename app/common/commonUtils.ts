@@ -11,6 +11,9 @@ export const commonStyles = StyleSheet.create({
     marginLeft: 4,
     marginTop: 12
   },
+  formInputView: {
+    margin: 20
+  }
 });
 
 //  Reusable toast function

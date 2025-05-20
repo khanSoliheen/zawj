@@ -30,6 +30,7 @@ export default [
       },
     },
     plugins: {
+      'react-native/react-native': true, 
       '@typescript-eslint': tseslint,
       react,
       'react-hooks': reactHooks,

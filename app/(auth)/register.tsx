@@ -39,11 +39,11 @@ export default function Register() {
       gender: 'male',
     },
   });
+
   const password = watch('password');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = (_: RegisterFormData) => {
+    console.log()
     showToaster("Registration is successful")
     router.push('/login');
   };
@@ -62,18 +62,22 @@ export default function Register() {
             control={control}
             placeholder="First Name"
             error={errors.firstName}
+            required={true}
           />
           <Input
             name="lastName"
             control={control}
             placeholder="Last Name"
             error={errors.lastName}
+            required={true}
           />
           <Input
             name="email"
             control={control}
             placeholder="Email"
             error={errors.email}
+            required={true}
+            email={true}
           />
           <View style={[commonStyles.formInputView]}>
 
@@ -140,6 +144,7 @@ export default function Register() {
             secureTextEntry={true}
             placeholder="Password"
             error={errors.password}
+            required={true}
           />
           <Input
             name="confirmPassword"
@@ -147,6 +152,8 @@ export default function Register() {
             secureTextEntry={true}
             placeholder="Confirm Password"
             error={errors.confirmPassword}
+            required={true}
+            // todo - validation for matching with password
           />
           <CustomButton
             onPress={handleSubmit(onSubmit)}
@@ -176,7 +183,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    // marginBottom: 15,
   },
   genderContainer: {
     flexDirection: 'row',

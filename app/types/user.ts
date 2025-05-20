@@ -1,6 +1,8 @@
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
   avatarUrl: string;
   gender: 'Male' | 'Female';
   bio: string;

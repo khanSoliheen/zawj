@@ -58,7 +58,6 @@ export default function Login() {
       <CustomButton
         onPress={handleSubmit(onSubmit)}
         title={t('login_page.button.text')}
-        variant="primary"
       />
 
       <Link href="./register" asChild>

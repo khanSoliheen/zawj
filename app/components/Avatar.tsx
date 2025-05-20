@@ -1,6 +1,7 @@
 // app/components/Avatar.tsx
 import React from 'react';
 import { Image, View, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/useTheme';
 
 interface AvatarProps {
   src: string;
@@ -9,11 +10,23 @@ interface AvatarProps {
   width?: number;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, borderColor = '#E74C3C', height = 160, width = 160 }) => (
-  <View style={[styles.avatarContainer, { borderColor, height, width }]}>
-    <Image source={{ uri: src }} style={styles.avatarImage} />
-  </View>
-);
+const Avatar: React.FC<AvatarProps> = ({ src, borderColor, height = 160, width = 160 }) => {
+  const theme = useTheme();
+  
+  return (
+    <View style={[
+      styles.avatarContainer,
+      {
+        borderColor: borderColor || theme.highlight,
+        height,
+        width,
+        backgroundColor: theme.card
+      }
+    ]}>
+      <Image source={{ uri: src }} style={styles.avatarImage} />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   avatarContainer: {
@@ -21,7 +34,6 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     overflow: 'hidden',
     alignSelf: 'center',
-    backgroundColor: '#fff',
     marginVertical: 16,
   },
   avatarImage: {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useTheme } from '../theme/useTheme';
+
 import { Avatar } from '.';
+import { useTheme } from '../theme/useTheme';
 
 export interface ChatPreview {
   id: string;
@@ -21,7 +21,6 @@ interface ChatListItemProps {
 }
 
 const ChatListItem: React.FC<ChatListItemProps> = ({ chat }) => {
-  const router = useRouter();
   const theme = useTheme();
 
   const handlePress = () => {
@@ -40,8 +39,8 @@ const ChatListItem: React.FC<ChatListItemProps> = ({ chat }) => {
         src={chat.user.avatarUri}
         size="small"
         initials={chat.user.name.charAt(0)}
-        // alignment='left'
-        // fallbackText={chat.user.name.charAt(0)}
+      // alignment='left'
+      // fallbackText={chat.user.name.charAt(0)}
       />
       <View style={styles.content}>
         <View style={styles.header}>
@@ -122,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatListItem; 
+export default ChatListItem;

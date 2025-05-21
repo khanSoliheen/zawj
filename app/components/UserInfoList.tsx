@@ -1,9 +1,10 @@
 // app/components/UserInfoList.tsx
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+
 import { UserInfoCard } from '.';
-import { User } from '../types/user';
 import { useTheme } from '../theme/useTheme';
+import { User } from '../types/user';
 
 
 interface UserInfoListProps {
@@ -12,12 +13,12 @@ interface UserInfoListProps {
 
 const UserInfoList: React.FC<UserInfoListProps> = ({ users }) => {
   const theme = useTheme();
-  
+
   return (
-    <ScrollView 
+    <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={[
-        styles.list, 
+        styles.list,
         { backgroundColor: theme.background }
       ]}
     >
@@ -29,8 +30,8 @@ const UserInfoList: React.FC<UserInfoListProps> = ({ users }) => {
 };
 
 const styles = StyleSheet.create({
-  list: { 
-    paddingVertical: 32 
+  list: {
+    paddingVertical: 32
   },
 });
 

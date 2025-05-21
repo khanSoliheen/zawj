@@ -1,5 +1,6 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
+
 import { ChatListItem } from '../components'
 
 export default function Chat() {
@@ -20,7 +21,7 @@ export default function Chat() {
   return (
     <View>
       {chatList.map((chat) => {
-      return <ChatListItem chat={chat} />
+        return <ChatListItem chat={chat} />
       })}
     </View>
   )

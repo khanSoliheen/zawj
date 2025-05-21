@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Link } from 'expo-router';
 import { useExpoRouter } from 'expo-router/build/global-state/router-store';
@@ -32,7 +31,6 @@ export default function Register() {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<RegisterFormData>({
     defaultValues: {
@@ -40,10 +38,8 @@ export default function Register() {
     },
   });
 
-  const password = watch('password');
 
   const onSubmit = (_: RegisterFormData) => {
-    console.log()
     showToaster("Registration is successful")
     router.push('/login');
   };
@@ -153,7 +149,7 @@ export default function Register() {
             placeholder="Confirm Password"
             error={errors.confirmPassword}
             required={true}
-            // todo - validation for matching with password
+          // todo - validation for matching with password
           />
           <CustomButton
             onPress={handleSubmit(onSubmit)}

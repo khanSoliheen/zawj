@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { UserInfoList } from '../components'
 import { User } from '../types/user'
 

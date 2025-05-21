@@ -1,6 +1,7 @@
 // app/components/Avatar.tsx
 import React from 'react';
 import { Image, View, StyleSheet } from 'react-native';
+
 import { useTheme } from '../theme/useTheme';
 
 interface AvatarProps {

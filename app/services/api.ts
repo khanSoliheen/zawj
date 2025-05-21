@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ApiError, ApiResponse } from '../interface/api';
+
+import { ApiError } from '../interface/api';
 
 const BASE_URL = 'YOUR_API_BASE_URL';
 
@@ -56,4 +57,4 @@ class ApiService {
   }
 }
 
-export default ApiService; 
+export default ApiService;

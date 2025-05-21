@@ -1,6 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Redirect, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ! temporarily showing the header
 export default function AuthLayout() {
@@ -15,8 +15,8 @@ export default function AuthLayout() {
     try {
       const token = await AsyncStorage.getItem('@auth_token');
       setIsAuthenticated(!!token);
-    } catch (error) {
-      console.error('Error checking auth:', error);
+    } catch (_error) {
+      // TODO:: Handle error gracefully
     } finally {
       setIsLoading(false);
     }

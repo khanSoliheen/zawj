@@ -1,10 +1,11 @@
 // app/components/UserInfoCard.tsx
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+
 import { Avatar, UserDetails } from '.';
-import { User } from '../types/user';
 import { useTheme } from '../theme/useTheme';
-import { Ionicons } from '@expo/vector-icons';
+import { User } from '../types/user';
 
 interface UserInfoCardProps {
   user: User;
@@ -18,7 +19,6 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user }) => {
   const handleConnect = () => {
     // TODO: Implement navigation to chat screen
     // For now, just log
-    console.log('Connect pressed');
   };
 
   return (
@@ -30,8 +30,8 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user }) => {
         marginVertical: 32,
       }
     ]}>
-      <Avatar src={user.avatarUrl} size="large" initials={`${user.firstName.substring(0, 1)}${user.lastName.substring(0,1)}`}  />
-      <UserDetails  firstNameInitial={user.firstName.substring(0,1)} lastName={user.lastName} bio={user.bio} />
+      <Avatar src={user.avatarUrl} size="large" initials={`${user.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}`} />
+      <UserDetails firstNameInitial={user.firstName.substring(0, 1)} lastName={user.lastName} bio={user.bio} />
       <View style={styles.actionsRow}>
         <TouchableOpacity
           style={styles.actionButton}

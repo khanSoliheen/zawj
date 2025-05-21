@@ -30,7 +30,7 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user }) => {
         marginVertical: 32,
       }
     ]}>
-      <Avatar src={user.avatarUrl} />
+      <Avatar src={user.avatarUrl} size="large" initials={`${user.firstName.substring(0, 1)}${user.lastName.substring(0,1)}`}  />
       <UserDetails  firstNameInitial={user.firstName.substring(0,1)} lastName={user.lastName} bio={user.bio} />
       <View style={styles.actionsRow}>
         <TouchableOpacity

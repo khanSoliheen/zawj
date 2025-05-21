@@ -21,12 +21,8 @@ import { ScrollView } from 'react-native';
 import { commonStyles, showToaster } from '@/app/common/commonUtils';
 import { useThemeContext } from '@/app/theme/context';
 
-
-
-import Input from '../components/input';
+import { Input, CustomButton } from '../components';
 import { RegisterFormData } from '../interface/Interfaces';
-
-
 
 export default function Register() {
   const router = useExpoRouter();
@@ -43,12 +39,11 @@ export default function Register() {
       gender: 'male',
     },
   });
-  const password = watch('password');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const password = watch('password');
 
   const onSubmit = (_: RegisterFormData) => {
+    console.log()
     showToaster("Registration is successful")
     router.push('/login');
   };
@@ -67,196 +62,103 @@ export default function Register() {
             control={control}
             placeholder="First Name"
             error={errors.firstName}
+            required={true}
           />
-          <View style={[commonStyles.formInputView]}>
-          {/* First Name */}
-          <Controller
-            name="firstName"
-            control={control}
-            rules={{ required: 'First name is required' }}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="First Name"
-                value={value}
-                onChangeText={onChange}
-                style={[styles.input, { borderColor: theme.border }]}
-                placeholderTextColor={theme.text}
-              />
-            )}
-          />
-            {errors.firstName && <Text style={[commonStyles.errorText]}>{errors.firstName.message}</Text>}
-          </View>
-          <View style={[commonStyles.formInputView]}>
-          {/* Last Name */}
-          <Controller
+          <Input
             name="lastName"
             control={control}
-            rules={{ required: 'Last name is required' }}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Last Name"
-                value={value}
-                onChangeText={onChange}
-                style={[styles.input, { borderColor: theme.border }]}
-                placeholderTextColor={theme.text}
-              />
-            )}
+            placeholder="Last Name"
+            error={errors.lastName}
+            required={true}
           />
-            {errors.lastName && <Text style={[commonStyles.errorText]}>{errors.lastName.message}</Text>}
-          </View>
-          <View style={[commonStyles.formInputView]}>
-          {/* Email */}
-          <Controller
+          <Input
             name="email"
             control={control}
-            rules={{
-              required: 'Email is required',
-              pattern: {
-                value: /^\S+@\S+$/i,
-                message: 'Invalid email format',
-              },
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Email"
-                value={value}
-                onChangeText={onChange}
-                style={[styles.input, { borderColor: theme.border }]}
-                placeholderTextColor={theme.text}
-              />
-            )}
+            placeholder="Email"
+            error={errors.email}
+            required={true}
+            email={true}
           />
-            {errors.email && <Text style={[commonStyles.errorText]}>{errors.email.message}</Text>}
-          </View>
           <View style={[commonStyles.formInputView]}>
 
-          {/* Gender */}
-          <Controller
-            name="gender"
-            control={control}
-            rules={{ required: 'Gender is required' }}
-            render={({ field: { onChange, value } }) => (
-              <View style={styles.genderContainer}>
-                <TouchableOpacity onPress={() => onChange('male')}>
-                  <View style={[styles.genderOption, value === 'male' && styles.selected]}>
-                    <Text style={styles.icon}>🧔‍♂️</Text>
-                    <Text>Male</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => onChange('female')}>
-                  <View style={[styles.genderOption, value === 'female' && styles.selected]}>
-                    <Text style={styles.icon}>🧕</Text>
-                    <Text>Female</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
+            {/* Gender */}
+            <Controller
+              name="gender"
+              control={control}
+              rules={{ required: 'Gender is required' }}
+              render={({ field: { onChange, value } }) => (
+                <View style={styles.genderContainer}>
+                  <TouchableOpacity onPress={() => onChange('male')}>
+                    <View style={[styles.genderOption, value === 'male' && styles.selected]}>
+                      <Text style={styles.icon}>🧔‍♂️</Text>
+                      <Text>Male</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => onChange('female')}>
+                    <View style={[styles.genderOption, value === 'female' && styles.selected]}>
+                      <Text style={styles.icon}>🧕</Text>
+                      <Text>Female</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
             {errors.gender && <Text style={[commonStyles.errorText]}>{errors.gender.message}</Text>}
           </View>
           <View style={[commonStyles.formInputView]}>
-          {/* Date of Birth */}
-          <Controller
-            name="dateOfBirth"
-            control={control}
-            rules={{ required: 'Date of Birth is required' }}
-            render={({ field: { onChange, value } }) => (
-              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                <TextInput
-                  placeholder="Date of Birth"
-                  value={value}
-                  editable={false}
-                  style={[styles.input, { borderColor: theme.border }]}
-                  placeholderTextColor={theme.text}
-                />
-                {showDatePicker && (
-                  <DateTimePicker
-                    mode="date"
-                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    value={value ? new Date(value) : new Date()}
-                    onChange={(_, selectedDate) => {
-                      setShowDatePicker(false);
-                      if (selectedDate) {
-                        onChange(selectedDate.toISOString().split('T')[0]);
-                      }
-                    }}
+            {/* Date of Birth */}
+            <Controller
+              name="dateOfBirth"
+              control={control}
+              rules={{ required: 'Date of Birth is required' }}
+              render={({ field: { onChange, value } }) => (
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <TextInput
+                    placeholder="Date of Birth"
+                    value={value}
+                    editable={false}
+                    style={[styles.input, { borderColor: theme.border }]}
+                    placeholderTextColor={theme.text}
                   />
-                )}
-              </TouchableOpacity>
-            )}
-          />
+                  {showDatePicker && (
+                    <DateTimePicker
+                      mode="date"
+                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                      value={value ? new Date(value) : new Date()}
+                      onChange={(_, selectedDate) => {
+                        setShowDatePicker(false);
+                        if (selectedDate) {
+                          onChange(selectedDate.toISOString().split('T')[0]);
+                        }
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+              )}
+            />
             {errors.dateOfBirth && <Text style={[commonStyles.errorText]}>{errors.dateOfBirth.message}</Text>}
           </View>
-          <View style={[commonStyles.formInputView]}>
-          {/* Password */}
-          <Controller
+          <Input
             name="password"
             control={control}
-            rules={{ required: 'Password is required' }}
-            render={({ field: { onChange, value } }) => (
-              <View style={{ position: 'relative' }}>
-                <TextInput
-                  placeholder="Password"
-                  secureTextEntry={!showPassword}
-                  value={value}
-                  onChangeText={onChange}
-                  style={[styles.input, { borderColor: theme.border, paddingRight: 40 }]}
-                  placeholderTextColor={theme.text}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(prev => !prev)}
-                  style={{ position: 'absolute', right: 12, top: 12 }}
-                >
-                  <Ionicons
-                    name={showPassword ? 'eye' : 'eye-off'}
-                    size={20}
-                    color={theme.accent}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+            secureTextEntry={true}
+            placeholder="Password"
+            error={errors.password}
+            required={true}
           />
-          {errors.password && (
-            <Text style={commonStyles.errorText}>{errors.password.message}</Text>
-          )}
-          </View>
-          <View style={[commonStyles.formInputView]}>
-
-          {/* Confirm Password */}
-          <Controller
+          <Input
             name="confirmPassword"
             control={control}
-            rules={{ required: 'Confirm Password is required', validate: value => value === password || 'Passwords do not match', }}
-            render={({ field: { onChange, value } }) => (
-              <View style={{ position: 'relative' }}>
-                <TextInput
-                  placeholder="Confirm Password"
-                  secureTextEntry={!showConfirmPassword}
-                  value={value}
-                  onChangeText={onChange}
-                  style={[styles.input, { borderColor: theme.border, paddingRight: 40 }]}
-                  placeholderTextColor={theme.text}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowConfirmPassword(prev => !prev)}
-                  style={{ position: 'absolute', right: 12, top: 12 }}
-                >
-                  <Ionicons
-                    name={showConfirmPassword ? 'eye' : 'eye-off'}
-                    size={20}
-                    color={theme.accent}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+            secureTextEntry={true}
+            placeholder="Confirm Password"
+            error={errors.confirmPassword}
+            required={true}
+            // todo - validation for matching with password
           />
-          {errors.confirmPassword && (
-            <Text style={commonStyles.errorText}>{errors.confirmPassword.message}</Text>
-            )}
-            </View>
-          <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.submitButton}>
-            <Text style={{ color: 'white' }}>{t('register_page.button.register')}</Text>
-          </TouchableOpacity>
+          <CustomButton
+            onPress={handleSubmit(onSubmit)}
+            title={t('register_page.button.register')}
+          />
           <Link href="/" asChild>
             <Text style={{ padding: 20 }}>{t('register_page.backToLogin')}</Text>
           </Link>
@@ -281,7 +183,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    // marginBottom: 15,
   },
   genderContainer: {
     flexDirection: 'row',
@@ -303,12 +204,5 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 18,
     marginRight: 8,
-  },
-  submitButton: {
-    marginTop: 20,
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: '#5f795f',
-    alignItems: 'center',
   },
 });

@@ -17,7 +17,7 @@ interface InputProps extends TextInputProps {
   required?: boolean;
 }
 
-export default function Input({ name, control, label, error, secureTextEntry, required, email, ...rest }: InputProps) {
+export default function Input({ name, control, label, error, secureTextEntry, required, email,  ...rest }: InputProps) {
   const { theme } = useThemeContext();
   const [showSecureText, setShowSecureText] = React.useState(secureTextEntry);
   return (

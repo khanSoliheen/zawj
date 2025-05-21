@@ -5,22 +5,36 @@ import { useTheme } from '../theme/useTheme';
 
 interface AvatarProps {
   src: string;
-  borderColor?: string;
-  height?: number;
-  width?: number;
+  initials: string;
+  size: 'small' | 'medium' | 'large' | number;
+  alignment?: 'center' | 'left' | 'right'; // might remove
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, borderColor, height = 160, width = 160 }) => {
+const getSize = (size: any): number => {
+  if (typeof size === 'number') return size;
+  switch (size) {
+    case 'small': return 40;
+    case 'medium': return 60;
+    case 'large': return 200;
+    default: return 60;
+  }
+};
+
+
+const Avatar: React.FC<AvatarProps> = ({ src, size }) => {
   const theme = useTheme();
   
+
+  const dimension = getSize(size)
   return (
     <View style={[
       styles.avatarContainer,
       {
-        borderColor: borderColor || theme.highlight,
-        height,
-        width,
-        backgroundColor: theme.card
+        borderColor: theme.highlight,
+        backgroundColor: theme.card,
+        width: dimension,
+        height: dimension,
+        borderRadius: dimension/2,
       }
     ]}>
       <Image source={{ uri: src }} style={styles.avatarImage} />
@@ -30,16 +44,13 @@ const Avatar: React.FC<AvatarProps> = ({ src, borderColor, height = 160, width =
 
 const styles = StyleSheet.create({
   avatarContainer: {
-    borderRadius: 80,
     borderWidth: 4,
     overflow: 'hidden',
     alignSelf: 'center',
-    marginVertical: 16,
   },
   avatarImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 80,
   },
 });
 

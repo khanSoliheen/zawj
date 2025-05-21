@@ -1,13 +1,14 @@
 import { Slot } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ThemeProvider } from './theme/context';
+import { ThemeProvider, useThemeContext } from './theme/context';
 import './i18n';
 
 export default function Layout() {
+    const { theme } = useThemeContext();
   return (
     <ThemeProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
         <Slot />
       </SafeAreaView>
     </ThemeProvider>

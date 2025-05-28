@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "zawjapp", // for deep linking
-    "userInterfaceStyle": "dark", // till full theme implementation
+    "userInterfaceStyle": "light", // till full theme implementation
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true

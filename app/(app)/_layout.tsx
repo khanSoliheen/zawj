@@ -1,12 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Link, Tabs } from "expo-router";
 
 import { useTheme } from "../theme/useTheme";
+import { Text } from "react-native";
 
 export default function AuthLayout() {
   const theme = useTheme();
 
   return (
+    <>
+    <Link href="/" asChild>
+      <Text style={{ padding: 20 }}>Login Flow</Text>
+    </Link>
     <Tabs
       screenOptions={{
         tabBarStyle: {
@@ -42,7 +47,7 @@ export default function AuthLayout() {
       <Tabs.Screen 
         name="preferences" 
         options={{
-          title: 'Settings',
+          title: 'Preferences',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="settings" size={size} color={color} />
           ),
@@ -57,6 +62,7 @@ export default function AuthLayout() {
           ),
         }}
       />
-    </Tabs>
+      </Tabs>
+    </>
   );
 }

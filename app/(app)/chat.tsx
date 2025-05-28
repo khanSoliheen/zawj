@@ -21,7 +21,7 @@ export default function Chat() {
   return (
     <View>
       {chatList.map((chat) => {
-        return <ChatListItem chat={chat} />
+        return <ChatListItem key={chat.id} chat={chat} />
       })}
     </View>
   )

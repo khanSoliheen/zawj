@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -24,7 +25,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({ chat }) => {
   const theme = useTheme();
 
   const handlePress = () => {
-    // router.push(`/chat/${chat.id}`);
+    router.replace(`/chats/${chat.id}`);
   };
 
   return (

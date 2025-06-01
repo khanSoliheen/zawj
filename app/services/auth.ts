@@ -1,9 +1,14 @@
 import ApiService from './api';
 import { AuthResponse, LoginCredentials, RegisterData, User } from '../interface/api';
+import { supabase } from '../lib/supabase';
 
 class AuthService {
-  static async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    return ApiService.post<AuthResponse>('/auth/login', credentials);
+  static async login(credentials: LoginCredentials): Promise<any> {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      })
+    if (error) return error.message;
   }
 
   static async register(data: RegisterData): Promise<AuthResponse> {

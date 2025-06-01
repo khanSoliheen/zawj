@@ -1,5 +1,5 @@
 import { Link, useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View, StyleSheet, Text, Image } from 'react-native';
@@ -8,6 +8,7 @@ import logo from "@/assets/images/logo.png";
 
 import { Input, CustomButton } from '../components';
 import { useThemeContext } from '../theme/context';
+import AuthService from '../services/auth';
 
 interface LoginFormData {
   email: string;
@@ -30,8 +31,9 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (_: LoginFormData) => {
-    router.push('/home');
+  const onSubmit = async (_: LoginFormData) => {
+    const error = await AuthService.login(_)
+    // router.push('/home');
   };
 
   return (

@@ -5,8 +5,9 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import parser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import reactNative from 'eslint-plugin-react-native';
 import importPlugin from 'eslint-plugin-import';
+import reactNative from 'eslint-plugin-react-native';
+import globals from "globals";
 
 export default [
   js.configs.recommended,
@@ -24,14 +25,15 @@ export default [
         ecmaFeatures: { jsx: true },
       },
       globals: {
-        fetch: 'readonly',
+        ...globals.browser,   // fetch, window, document, etc.
+        ...globals.node,      // process, __dirname, etc.
       },
     },
     plugins: {
+      'react-native': reactNative,
       '@typescript-eslint': tseslint,
       react,
       'react-hooks': reactHooks,
-      'react-native': reactNative,
       import: importPlugin,
     },
     rules: {
@@ -43,28 +45,19 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
 
-      // ✅ TypeScript unused
+      // TS unused vars instead of base rule
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
 
-      // ✅ Import ordering
       'import/order': [
         'warn',
         {
           groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
           pathGroups: [
-            {
-              pattern: '@/**',
-              group: 'internal',
-              position: 'after',
-            },
+            { pattern: '@/**', group: 'internal', position: 'after' },
           ],
           pathGroupsExcludedImportTypes: ['builtin'],
           alphabetize: { order: 'asc', caseInsensitive: true },

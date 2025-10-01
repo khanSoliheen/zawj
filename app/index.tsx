@@ -3,41 +3,47 @@ import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 
-import logo from '@/assets/images/logo.png';
+import logo from './assets/images/carousel1.png';
 
-import { useTheme } from './theme/useTheme';
+// import { useTheme } from './theme/useTheme';
 
 export default function Welcome() {
-  const theme = useTheme();
+  // const theme = useTheme();
   const { t } = useTranslation();
   return (
-    <ScrollView contentContainerStyle={{ ...styles.container, backgroundColor: theme.background }}>
+    <ScrollView contentContainerStyle={styles.container}>
       {/* Logo */}
       <Image
         style={styles.tinyLogo}
         source={logo}
       />
       {/* Tagline */}
-      <Text style={{ ...styles.tagline, color: theme.text }}>{t('find_your_life_partner')}</Text>
+      <Text style={styles.tagline}>{t('find_your_life_partner')}</Text>
 
       {/* Get Started Button */}
       <Link href="./login" asChild>
-        <TouchableOpacity style={{ ...styles.primaryButton, backgroundColor: theme.button.background, borderColor: theme.text }}>
-          <Text style={{ ...styles.outlineButtonText, color: theme.button.text }}>{t('button.get_started')}</Text>
+        <TouchableOpacity style={styles.primaryButton}>
+          <Text style={styles.outlineButtonText}>{t('button.get_started')}</Text>
+        </TouchableOpacity>
+      </Link>
+      <Link style={{ margin: 10 }} href="./home" asChild>
+        <TouchableOpacity style={styles.primaryButton}>
+          <Text style={styles.outlineButtonText}>Straight To Home</Text>
         </TouchableOpacity>
       </Link>
 
+
       {/* How It Works */}
-      <Text style={{ ...styles.sectionTitle, color: theme.text }}>{t('how_it_works')}</Text>
+      <Text style={styles.sectionTitle}>{t('how_it_works')}</Text>
       <View style={styles.stepList}>
-        <Text style={{ ...styles.stepItem, color: theme.text }}>1. Create a profile</Text>
-        <Text style={{ ...styles.stepItem, color: theme.text }}>2. Browse profiles</Text>
-        <Text style={{ ...styles.stepItem, color: theme.text }}>3. Connect with matches</Text>
+        <Text style={styles.stepItem}>1. Create a profile</Text>
+        <Text style={styles.stepItem}>2. Browse profiles</Text>
+        <Text style={styles.stepItem}>3. Connect with matches</Text>
       </View>
 
       {/* Learn More */}
-      <TouchableOpacity style={{ ...styles.primaryButton, backgroundColor: theme.background, borderColor: theme.highlight, borderWidth: 2, borderRadius: '30%' }}>
-        <Text style={{ ...styles.outlineButtonText, color: theme.highlight }}>{t('button.learn_more')}</Text>
+      <TouchableOpacity style={[styles.primaryButton, styles.learnMoreButton]}>
+        <Text style={styles.outlineButtonText}>{t('button.learn_more')}</Text>
       </TouchableOpacity>
     </ScrollView >
   );
@@ -58,8 +64,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '60%',
-    borderRadius: '10%',
-    height: '7%',
+    borderRadius: 16,
+    minHeight: 52,
   },
   primaryButtonText: {
     fontSize: 50,
@@ -79,15 +85,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 4,
   },
-  outlineButton: {
-    borderWidth: 2,
-    padding: 12,
-    borderRadius: 30,
-    paddingHorizontal: 32,
-  },
   outlineButtonText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  learnMoreButton: {
+    borderWidth: 2,
+    borderRadius: 24,
   },
   tinyLogo: {
     width: 300,

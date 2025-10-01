@@ -1,9 +1,10 @@
 // tsconfig.json
 {
   "extends": "expo/tsconfig.base",
+  "outDir": "dist",
   "compilerOptions": {
     "strict": true,
-    "baseUrl": ".",
+    "baseUrl": "./app",
     "paths": {
       "@/*": [
         "./*"

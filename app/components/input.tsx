@@ -1,81 +1,201 @@
-// components/Input.tsx
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Controller, Control, FieldError } from 'react-hook-form';
-import { TextInput, Text, View, StyleSheet, TextInputProps, TouchableOpacity } from 'react-native';
+import React, { forwardRef, useCallback, useState } from 'react';
+import {
+  Image,
+  TextInput,
+  TextStyle,
+  ViewStyle,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 
-import { commonStyles } from '@/app/common/commonUtils';
-import { useThemeContext } from '@/app/theme/context';
+import Block from './block';
+import Text from './text';
+import { WEIGHTS } from '../constants/theme';
+import { IInputProps } from '../constants/types';
+import useTheme from '../hooks/useTheme';
 
-interface InputProps extends TextInputProps {
-  name: string;
-  control: Control<any>;
-  label?: string;
-  error?: FieldError;
-  secureTextEntry?: boolean;
-  email?: boolean;
-  required?: boolean;
-}
+type Props = IInputProps & {
+  error?: string;          // NEW: validation message (optional)
+  helperText?: string;     // optional helper line
+};
 
-export default function Input({ name, control, label, error, secureTextEntry, required, email, ...rest }: InputProps) {
-  const { theme } = useThemeContext();
-  const [showSecureText, setShowSecureText] = React.useState(secureTextEntry);
-  return (
-    <View style={{ marginBottom: 16 }}>
-      {label && <Text style={[styles.label, { color: theme.text }]}>{label}</Text>}
+const Input = forwardRef<TextInput, Props>(({
+  id = 'Input',
+  style,
+  color,
+  primary,
+  secondary,
+  tertiary,
+  black,
+  white,
+  gray,
+  danger,
+  warning,
+  success,
+  info,
+  search,
+  disabled,
+  label,
+  icon,
+  marginBottom,
+  marginTop,
+  marginHorizontal,
+  marginVertical,
+  marginRight,
+  marginLeft,
+  onFocus,
+  onBlur,
+  error,
+  helperText,
+  ...props
+}, ref) => {
+  const { assets, colors, sizes } = useTheme();
+  const [isFocused, setFocused] = useState(false);
 
-      <Controller
-        name={name}
-        control={control}
-        rules={{
-          ...(required && { required: `This is required field` }),
-          ...(email && {
-            pattern: {
-              value: /^\S+@\S+$/i,
-              message: 'Invalid email format',
-            }
-          }),
-        }}
-        render={({ field: { onChange, value, onBlur } }) => (
-          <View style={{ position: 'relative' }}>
-            <TextInput
-              style={[styles.input, { borderColor: theme.border, color: theme.text }]}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              value={value}
-              placeholderTextColor={theme.text}
-              secureTextEntry={showSecureText}
-              {...rest}
-            />
-            {secureTextEntry &&
-              <TouchableOpacity
-                onPress={() => setShowSecureText(prev => !prev)}
-                style={{ position: 'absolute', right: 12, top: 12 }}
-              >
-                <Ionicons
-                  name={!showSecureText ? 'eye' : 'eye-off'}
-                  size={20}
-                  color={theme.accent}
-                />
-              </TouchableOpacity>
-            }
-          </View>
-        )}
-      />
-      {error && <Text style={commonStyles.errorText}>{error.message}</Text>}
-    </View>
+  const handleFocus = useCallback(
+    (event, focus) => {
+      setFocused(focus);
+      focus ? onFocus?.(event) : onBlur?.(event);
+    },
+    [onFocus, onBlur],
   );
-}
 
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-  },
-  label: {
-    marginBottom: 4,
-    fontWeight: '600',
-  },
+  const colorIndex =
+    primary ? 'primary' :
+      secondary ? 'secondary' :
+        tertiary ? 'tertiary' :
+          black ? 'black' :
+            white ? 'white' :
+              gray ? 'gray' :
+                danger ? 'danger' :
+                  warning ? 'warning' :
+                    success ? 'success' :
+                      info ? 'info' : null;
+
+  const inputColor = color ?? (colorIndex ? colors?.[colorIndex] : colors.gray);
+
+  const inputBoxStyles = StyleSheet.flatten([
+    style,
+    {
+      minHeight: sizes.inputHeight,
+      ...(marginBottom && { marginBottom }),
+      ...(marginTop && { marginTop }),
+      ...(marginHorizontal && { marginHorizontal }),
+      ...(marginVertical && { marginVertical }),
+      ...(marginRight && { marginRight }),
+      ...(marginLeft && { marginLeft }),
+    },
+  ]) as ViewStyle;
+
+  const borderColor =
+    error ? colors.danger : (isFocused ? colors.focus : inputColor);
+
+  const inputContainerStyles = StyleSheet.flatten([
+    {
+      minHeight: sizes.inputHeight,
+      borderRadius: sizes.inputRadius,
+      borderWidth: isFocused ? 2 : sizes.inputBorder,
+      borderColor,
+      backgroundColor: disabled ? colors.card : undefined,
+    },
+  ]) as ViewStyle;
+
+  const inputStyles = StyleSheet.flatten([
+    {
+      flex: 1,
+      zIndex: 2,
+      height: '100%',
+      fontSize: sizes.p,
+      color: colors.input,
+      paddingHorizontal: sizes.inputPadding,
+    },
+  ]) as TextStyle;
+
+  // testID vs accessibilityLabel
+  const inputID =
+    Platform.OS === 'android' ? { accessibilityLabel: id } : { testID: id };
+
+  return (
+    <Block flex={0} style={inputBoxStyles}>
+      {label && (
+        <Text bold weight={WEIGHTS.semibold} color={colors.input} marginBottom={sizes.s}>
+          {label}
+        </Text>
+      )}
+
+      <Block
+        row
+        align="center"
+        justify="flex-end"
+        style={inputContainerStyles}
+        // accessibility
+        accessible
+        accessibilityRole="text"
+
+        accessibilityState={{ disabled: !!disabled, selected: isFocused }}
+      >
+        {search && assets.search && (
+          <Image
+            source={assets.search}
+            style={{ marginLeft: sizes.inputPadding, tintColor: colors.icon }}
+          />
+        )}
+
+        <TextInput
+          ref={ref}
+          {...inputID}
+          {...props}
+          style={inputStyles}
+          editable={!disabled}
+          placeholderTextColor={inputColor}
+          onFocus={(event) => handleFocus(event, true)}
+          onBlur={(event) => handleFocus(event, false)}
+          accessibilityHint={error ? `Error: ${error}` : undefined}
+        />
+
+        {icon && (
+          <TouchableOpacity onPress={() => { console.log('Icon pressed'); }}>
+            <Image
+              source={assets?.[icon]}
+              alt={icon}
+              style={{ marginRight: sizes.inputPadding, tintColor: colors.icon, }}
+            />
+          </TouchableOpacity>
+        )}
+
+        {(error && assets.warning) ? (
+          <Image
+            source={assets.warning}
+            style={{ marginRight: sizes.s, tintColor: colors.danger }}
+          />
+        ) : (success && assets.check) ? (
+          <Image
+            source={assets.check}
+            style={{
+              width: 12,
+              height: 9,
+              marginRight: sizes.s,
+              tintColor: colors.success,
+            }}
+          />
+        ) : null}
+      </Block>
+
+      {
+        (error || helperText) && (
+          <Text
+            bold
+            size={sizes.sm}
+            marginTop={sizes.s}
+            color={colors.danger}
+          >
+            {error ?? helperText}
+          </Text>
+        )
+      }
+    </Block >
+  );
 });
+
+export default React.memo(Input);

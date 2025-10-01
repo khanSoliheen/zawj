@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
+  NativeSyntheticEvent,
+  TargetedEvent,
 } from 'react-native';
 
 import Block from './block';
@@ -53,13 +55,10 @@ const Input = forwardRef<TextInput, Props>(({
   const { assets, colors, sizes } = useTheme();
   const [isFocused, setFocused] = useState(false);
 
-  const handleFocus = useCallback(
-    (event, focus) => {
-      setFocused(focus);
-      focus ? onFocus?.(event) : onBlur?.(event);
-    },
-    [onFocus, onBlur],
-  );
+  const handleFocus = useCallback((event: NativeSyntheticEvent<TargetedEvent>, focus: boolean) => {
+    setFocused(focus);
+    focus ? onFocus?.(event) : onBlur?.(event);
+  }, [onFocus, onBlur]);
 
   const colorIndex =
     primary ? 'primary' :

@@ -107,7 +107,7 @@ const Profile = () => {
                     justify="center"
                     radius={sizes.m}
                     paddingHorizontal={sizes.m}
-                    color="rgba(255,255,255,0.2)">
+                  >
                     <Text white bold transform="uppercase">
                       Follow
                     </Text>
@@ -117,7 +117,6 @@ const Profile = () => {
                   shadow={false}
                   radius={sizes.m}
                   marginHorizontal={sizes.sm}
-                  color="rgba(255,255,255,0.2)"
                   outlined={String(colors.white)}
                   onPress={() => handleSocialLink('twitter')}>
                   <Ionicons
@@ -129,7 +128,6 @@ const Profile = () => {
                 <Button
                   shadow={false}
                   radius={sizes.m}
-                  color="rgba(255,255,255,0.2)"
                   outlined={String(colors.white)}
                   onPress={() => handleSocialLink('dribbble')}>
                   <Ionicons
@@ -148,8 +146,7 @@ const Profile = () => {
             radius={sizes.sm}
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
             marginTop={-sizes.l}
-            marginHorizontal="8%"
-            color="rgba(255,255,255,0.2)">
+            marginHorizontal="8%">
             <Block
               row
               blur
@@ -178,10 +175,10 @@ const Profile = () => {
 
           {/* profile: about me */}
           <Block paddingHorizontal={sizes.sm}>
-            <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
+            <Text white h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
               About me
             </Text>
-            <Text p lineHeight={26}>
+            <Text white p lineHeight={26}>
               {user?.about}
             </Text>
           </Block>
@@ -189,7 +186,7 @@ const Profile = () => {
           {/* profile: photo album */}
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.s}>
             <Block row align="center" justify="space-between">
-              <Text h5 semibold>
+              <Text white h5 semibold>
                 album
               </Text>
               <Button>
@@ -228,9 +225,9 @@ const Profile = () => {
               </Block>
             </Block>
           </Block>
-        </Block>
-      </Block>
-    </Block>
+        </Block >
+      </Block >
+    </Block >
   );
 };
 

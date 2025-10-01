@@ -42,7 +42,6 @@ export interface IArticle {
   offers?: IProduct[];
   options?: IArticleOptions[];
   timestamp?: number;
-  onPress?: (event?: any) => void;
 }
 
 export interface IProduct {
@@ -61,9 +60,9 @@ export interface ILocation {
 }
 export interface IUseData {
   isDark: boolean;
-  handleIsDark: (isDark?: boolean) => void;
+  handleIsDark: (isDark: boolean) => void;
   theme: ITheme;
-  setTheme: (theme?: ITheme) => void;
+  setTheme: (theme: ITheme) => void;
   // user: IUser;
   // users: IUser[];
   // handleUser: (data?: IUser) => void;

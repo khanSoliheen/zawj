@@ -3,10 +3,11 @@ import * as Haptics from 'expo-haptics';
 import React, { useCallback, useState } from 'react';
 import { Platform, Pressable } from 'react-native';
 
+import { useData } from '@/hooks';
+
 import Block from './block';
 import Image from './image';
 import { ICheckboxProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Checkbox = ({
   onPress,
@@ -14,7 +15,8 @@ const Checkbox = ({
   id = 'Checkbox',
   ...props
 }: ICheckboxProps) => {
-  const { colors, icons, sizes } = useTheme();
+  const { theme } = useData();
+  const { colors, icons, sizes } = theme;
   const [checked, setChecked] = useState(false);
 
   const handlePress = useCallback(() => {

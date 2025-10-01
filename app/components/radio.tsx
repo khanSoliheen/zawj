@@ -24,7 +24,7 @@ type RadioGroupProps<T = string | number> = ViewProps & {
   children: React.ReactNode;
 };
 
-export function RadioGroup<T = string | number>({
+export function RadioGroup<T extends string | number = string | number>({
   value,
   defaultValue,
   onValueChange,
@@ -35,7 +35,7 @@ export function RadioGroup<T = string | number>({
   style,
   children,
   ...rest
-}: RadioGroupProps<T>) {
+}: RadioGroupProps<T>): React.JSX.Element {
   const [internal, setInternal] = useState<T | undefined>(defaultValue);
 
   const selected = value !== undefined ? value : internal;
@@ -46,15 +46,15 @@ export function RadioGroup<T = string | number>({
     onValueChange?.(val);
   }, [haptic, onValueChange, value]);
 
-  const ctx = useMemo(() => ({
+  const ctx: RadioGroupContextType<T> = useMemo(() => ({
     value: selected,
     disabled,
-    onChange: handleChange as (v: string | number) => void,
+    onChange: handleChange,
     haptic,
   }), [selected, disabled, handleChange, haptic]);
 
   return (
-    <RadioGroupCtx.Provider value={ctx}>
+    <RadioGroupCtx.Provider value={ctx as unknown as RadioGroupContextType}>
       <Block
         row={row}
         style={[row && { columnGap: gap }, !row && { rowGap: gap }, style]}

@@ -2,11 +2,12 @@ import React from 'react';
 import { StyleSheet, Modal as RNModal, ViewStyle, Platform } from 'react-native';
 
 
+import { useData } from '@/hooks';
+
 import Block from './block';
 import Button from './button';
 import Image from './image';
 import { IModalProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Modal = ({
   id = 'Modal',
@@ -15,7 +16,8 @@ const Modal = ({
   onRequestClose,
   ...props
 }: IModalProps) => {
-  const { assets, colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { assets, colors, sizes } = theme;
   const modalStyles = StyleSheet.flatten([style, {}]) as ViewStyle;
 
   // generate component testID or accessibilityLabel based on Platform.OS

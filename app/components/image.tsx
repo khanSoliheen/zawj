@@ -7,8 +7,9 @@ import {
   Platform,
 } from 'react-native';
 
+import { useData } from '@/hooks';
+
 import { IImageProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Image = ({
   id = 'Image',
@@ -39,7 +40,8 @@ const Image = ({
   marginBottom,
   ...props
 }: IImageProps) => {
-  const { colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes } = theme;
 
   const imageStyles = StyleSheet.flatten([
     style,

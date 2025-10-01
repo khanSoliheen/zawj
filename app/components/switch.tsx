@@ -8,8 +8,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import { useData } from '@/hooks';
+
 import { ISwitchProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Switch = ({
   id = 'Switch',
@@ -26,7 +27,8 @@ const Switch = ({
   ...props
 }: ISwitchProps) => {
   const [isChecked, setChecked] = useState(checked);
-  const { colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes } = theme;
   const activeColor = activeFillColor || colors.switchOn;
   const inactiveColor = inactiveFillColor || colors.switchOff;
 

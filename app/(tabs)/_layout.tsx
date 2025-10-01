@@ -1,11 +1,12 @@
 import { Tabs } from "expo-router";
 
 import { Image } from "@/components";
-import { useTheme } from "@/hooks";
+import { useData } from "@/hooks";
 
 // import { Ionicons } from "@expo/vector-icons";
 export default function AuthLayout() {
-  const { assets, colors } = useTheme();
+  const { theme } = useData();
+  const { assets, colors } = theme;
   return (
     <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen name="home" options={{
@@ -16,7 +17,8 @@ export default function AuthLayout() {
       <Tabs.Screen name="chat" options={{
         tabBarIcon: () => {
           return <Image source={assets.chat} color={colors.gray} />
-        }
+        },
+        title: 'Chat'
       }} />
       <Tabs.Screen name="preferences" options={{
         tabBarIcon: () => {
@@ -26,7 +28,8 @@ export default function AuthLayout() {
       <Tabs.Screen name="profile" options={{
         tabBarIcon: () => {
           return <Image source={assets.profile} color={colors.gray} />
-        }
+        },
+        title: 'Profile'
       }} />
       <Tabs.Screen
         name="chat/[id]"

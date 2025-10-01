@@ -10,8 +10,9 @@ import {
   Platform,
 } from 'react-native';
 
+import { useData } from '@/hooks';
+
 import { IButtonProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Button = ({
   id = 'Button',
@@ -70,7 +71,8 @@ const Button = ({
   onPress,
   ...props
 }: IButtonProps) => {
-  const { colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes } = theme;
   const colorIndex = primary
     ? 'primary'
     : secondary

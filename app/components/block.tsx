@@ -11,8 +11,9 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useData } from '@/hooks';
+
 import { IBlockProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Block = (props: IBlockProps) => {
   const {
@@ -73,7 +74,8 @@ const Block = (props: IBlockProps) => {
     start,
     ...rest
   } = props;
-  const { colors, sizes } = useTheme();
+  const { theme } = useData()
+  const { colors, sizes } = theme;
 
   const colorIndex = primary
     ? 'primary'

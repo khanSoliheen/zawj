@@ -6,12 +6,8 @@ import { Platform, TouchableOpacity } from 'react-native';
 import { z } from 'zod';
 
 
-import Block from '../components/block';
-import Button from '../components/button';
-import Image from '../components/image';
-import Input from '../components/input';
-import Text from '../components/text';
-import useTheme from '../hooks/useTheme';
+import { Block, Button, Image, Input, Text } from '@/components';
+import { useData } from '@/hooks';
 
 const isAndroid = Platform.OS === 'android';
 const schema = z.object({
@@ -22,7 +18,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function Login() {
-  const { colors, gradients, sizes, assets } = useTheme();
+  const { theme } = useData();
+  const { colors, gradients, sizes, assets } = theme;
 
   // const { t } = useTranslation();
   const router = useRouter();
@@ -44,7 +41,7 @@ export default function Login() {
   };
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe color={colors.background} marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
         {/* Email Field */}
         <Block flex={0} style={{ zIndex: 0 }}>

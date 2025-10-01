@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 
 import { Block, Text } from '@/components';
-import { useTheme } from '@/hooks';
+import { useData } from '@/hooks';
 
 import { IUser } from '../constants/types';
 
@@ -12,7 +12,8 @@ const User = ({
   dob,
   about,
 }: IUser) => {
-  const { gradients, sizes } = useTheme();
+  const { theme } = useData();
+  const { gradients, sizes } = theme;
   // render card for Newest & Fashion
   return (
     <TouchableWithoutFeedback>

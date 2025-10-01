@@ -1,8 +1,7 @@
-// tsconfig.json
 {
   "extends": "expo/tsconfig.base",
-  "outDir": "dist",
   "compilerOptions": {
+    "outDir": "dist",
     "strict": true,
     "baseUrl": "./app",
     "paths": {
@@ -15,7 +14,10 @@
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "customConditions": [
+      "react-native"
+    ],
     "resolveJsonModule": true,
     "skipLibCheck": true
   },

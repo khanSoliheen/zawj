@@ -96,13 +96,13 @@ export default function Login() {
             gradient={gradients.primary}
             marginTop={sizes.s}
             onPress={handleSubmit(onSubmit)}>
-            <Text white transform="uppercase">
+            <Text white>
               Login
             </Text>
           </Button>
         </Block>
         <TouchableOpacity onPress={() => router.push('/register')}>
-          <Block row align='center' style={{ zIndex: 0 }} center marginTop={sizes.md}>
+          <Block flex={0} row align='center' center marginTop={sizes.s}>
             <Text p semibold marginRight={sizes.s} color={colors.link}>
               Register
             </Text>

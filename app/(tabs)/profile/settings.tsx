@@ -61,6 +61,7 @@ export default function Settings() {
           <Text p>Dark Mode</Text>
           <Switch
             id="darkModeToggle"
+            inactiveFillColor={colors.secondary}
             checked={isDark}
             onPress={(checked) => {
               handleIsDark(checked);

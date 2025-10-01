@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
 import { Block, Text, Input } from '@/components';
@@ -83,11 +83,45 @@ const users: IUser[] = [
 const Home = () => {
   const { theme } = useData();
   const { colors, sizes } = theme;
+  const [query, setQuery] = useState('');
+  const deferredValue = useDeferredValue(query);
+
+  const filteredUsers = useMemo(() => {
+    const normalizedQuery = deferredValue.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return users;
+    }
+
+    return users.filter((user) => {
+      const searchableValues: string[] = [
+        user.name,
+        String(user.age),
+        user.location,
+        user.status,
+        user.education,
+        user.profession,
+        user.wali,
+        ...user.deen,
+        ...user.badges,
+      ];
+
+      return searchableValues.some((value) =>
+        value.toLowerCase().includes(normalizedQuery)
+      );
+    });
+  }, [deferredValue]);
+
+  const trimmedQuery = deferredValue.trim();
+  const resultsMessage = trimmedQuery
+    ? `Showing ${filteredUsers.length} ${
+        filteredUsers.length === 1 ? 'match' : 'matches'
+      } for “${trimmedQuery}”`
+    : 'All available profiles';
 
   const renderItem = ({ item }: { item: IUser }) => (
     <TouchableOpacity activeOpacity={0.9}>
       <Block
-        scroll
         card
         color={colors.card}
         padding={sizes.m}
@@ -157,15 +191,25 @@ const Home = () => {
   return (
     <Block safe flex={1} color={colors.background} paddingHorizontal={sizes.padding}>
       {/* Search bar */}
-      <Input search placeholder="Search profiles..." marginBottom={sizes.m} />
+      <Input
+        search
+        placeholder="Search profiles..."
+        marginBottom={sizes.s}
+        value={query}
+        onChangeText={setQuery}
+      />
+      <Text gray marginBottom={sizes.m} size={sizes.s}>
+        {resultsMessage}
+      </Text>
 
       {/* User List */}
       <FlatList
-        data={users}
+        data={filteredUsers}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: sizes.l }}
+        ListEmptyComponent={<Text center>No profiles found</Text>}
       />
     </Block>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import { Alert, ScrollView } from "react-native";
 
 import { Block, Text, Input, Button } from "@/components";
 import { useData } from "@/hooks";
@@ -15,7 +15,25 @@ const Preferences = () => {
   const [deen, setDeen] = useState("");
   const [waliVerified, setWaliVerified] = useState(false);
 
+  const sanitizeAgeInput = (value: string) => value.replace(/\D/g, "");
+
+  const handleMinAgeChange = (value: string) => {
+    setMinAge(sanitizeAgeInput(value));
+  };
+
+  const handleMaxAgeChange = (value: string) => {
+    setMaxAge(sanitizeAgeInput(value));
+  };
+
   const applyFilters = () => {
+    if (minAge && maxAge && Number(minAge) > Number(maxAge)) {
+      Alert.alert(
+        "Invalid age range",
+        "Minimum age cannot be greater than maximum age."
+      );
+      return;
+    }
+
     console.log({
       minAge,
       maxAge,
@@ -46,7 +64,7 @@ const Preferences = () => {
             <Input
               keyboardType="numeric"
               value={minAge}
-              onChangeText={setMinAge}
+              onChangeText={handleMinAgeChange}
               placeholder="e.g. 20"
             />
           </Block>
@@ -55,7 +73,7 @@ const Preferences = () => {
             <Input
               keyboardType="numeric"
               value={maxAge}
-              onChangeText={setMaxAge}
+              onChangeText={handleMaxAgeChange}
               placeholder="e.g. 35"
             />
           </Block>

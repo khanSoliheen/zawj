@@ -11,11 +11,9 @@ import globals from "globals";
 
 export default [
   js.configs.recommended,
-
   {
     ignores: ['node_modules/', 'app-example/', '.expo/', 'dist/', 'babel.config.js'],
   },
-
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -39,8 +37,11 @@ export default [
       import: importPlugin,
     },
     rules: {
+      // ✅ Hooks
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+
+      // ✅ React
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
 

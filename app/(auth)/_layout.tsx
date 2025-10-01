@@ -1,6 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Redirect, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ! temporarily showing the header
 export default function AuthLayout() {
@@ -30,5 +30,5 @@ export default function AuthLayout() {
     return <Redirect href="/(app)/home" />;
   }
 
-  return <Stack />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

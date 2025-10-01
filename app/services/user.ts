@@ -1,5 +1,5 @@
-import { UpdateProfileData, User } from '../interface/api';
 import ApiService from './api';
+import { UpdateProfileData, User } from '../interface/api';
 
 class UserService {
   static async getProfile(): Promise<User> {

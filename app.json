@@ -5,8 +5,8 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "zawjapp", // for deep linking
-    "userInterfaceStyle": "dark", // till full theme implementation
+    "scheme": "zawjapp",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true

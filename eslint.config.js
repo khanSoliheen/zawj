@@ -6,6 +6,8 @@ import parser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
+import reactNative from 'eslint-plugin-react-native';
+import globals from "globals";
 
 export default [
   js.configs.recommended,
@@ -25,12 +27,12 @@ export default [
         ecmaFeatures: { jsx: true },
       },
       globals: {
-        // console: true,
-        // process: true,
+        ...globals.browser,   // fetch, window, document, etc.
+        ...globals.node,      // process, __dirname, etc.
       },
     },
     plugins: {
-      'react-native/react-native': true, 
+      'react-native': reactNative,
       '@typescript-eslint': tseslint,
       react,
       'react-hooks': reactHooks,
@@ -41,24 +43,20 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
+
+      // TS unused vars instead of base rule
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-        },
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+
       'import/order': [
         'warn',
         {
           groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
           pathGroups: [
-            {
-              pattern: '@/**',
-              group: 'internal',
-              position: 'after',
-            },
+            { pattern: '@/**', group: 'internal', position: 'after' },
           ],
           pathGroupsExcludedImportTypes: ['builtin'],
           alphabetize: { order: 'asc', caseInsensitive: true },

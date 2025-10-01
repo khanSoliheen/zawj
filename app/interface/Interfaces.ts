@@ -1,4 +1,4 @@
-export interface LanguageDetectorPlugin {
+export interface ILanguageDetectorPlugin {
   type: 'languageDetector';
   async: boolean;
   detect: (_: (_: string) => void) => void;
@@ -7,7 +7,7 @@ export interface LanguageDetectorPlugin {
 }
 
 
-export interface RegisterFormData {
+export interface IRegisterFormData {
   firstName: string;
   lastName: string;
   email: string;
@@ -15,4 +15,8 @@ export interface RegisterFormData {
   dateOfBirth: string;
   password: string;
   confirmPassword: string;
+}
+
+export interface IButtonProps {
+  buttonText: string;
 }

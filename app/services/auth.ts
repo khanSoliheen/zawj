@@ -1,5 +1,5 @@
-import { AuthResponse, LoginCredentials, RegisterData, User } from '../interface/api';
 import ApiService from './api';
+import { AuthResponse, LoginCredentials, RegisterData, User } from '../interface/api';
 
 class AuthService {
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {

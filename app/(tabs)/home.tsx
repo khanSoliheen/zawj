@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
 import { Block, Text, Input } from '@/components';
@@ -83,11 +83,24 @@ const users: IUser[] = [
 const Home = () => {
   const { theme } = useData();
   const { colors, sizes } = theme;
+  const [query, setQuery] = useState('');
+  const deferredValue = useDeferredValue(query);
+
+  const filteredUsers = useMemo(() => {
+    const q = deferredValue.toLowerCase();
+    return users.filter(
+      (u) =>
+        u.name.toLowerCase().includes(q) ||
+        u.location.toLowerCase().includes(q) ||
+        u.profession.toLowerCase().includes(q)
+    );
+  }, [deferredValue]);
+
+
 
   const renderItem = ({ item }: { item: IUser }) => (
     <TouchableOpacity activeOpacity={0.9}>
       <Block
-        scroll
         card
         color={colors.card}
         padding={sizes.m}
@@ -157,15 +170,16 @@ const Home = () => {
   return (
     <Block safe flex={1} color={colors.background} paddingHorizontal={sizes.padding}>
       {/* Search bar */}
-      <Input search placeholder="Search profiles..." marginBottom={sizes.m} />
+      <Input search placeholder="Search profiles..." marginBottom={sizes.m} value={query} onChangeText={(text) => setQuery(text)} />
 
       {/* User List */}
       <FlatList
-        data={users}
+        data={filteredUsers}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: sizes.l }}
+        ListEmptyComponent={<Text center>No profiles found</Text>}
       />
     </Block>
   );

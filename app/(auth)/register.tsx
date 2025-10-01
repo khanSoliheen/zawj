@@ -293,7 +293,7 @@ export default function Login() {
                       {showDatePicker && (
                         <DateTimePicker
                           mode="date"
-                          textColor="black"
+                          textColor={colors.text as string}
                           maximumDate={new Date()}
                           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                           value={value ? new Date(value) : new Date()}

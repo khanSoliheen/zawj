@@ -87,16 +87,37 @@ const Home = () => {
   const deferredValue = useDeferredValue(query);
 
   const filteredUsers = useMemo(() => {
-    const q = deferredValue.toLowerCase();
-    return users.filter(
-      (u) =>
-        u.name.toLowerCase().includes(q) ||
-        u.location.toLowerCase().includes(q) ||
-        u.profession.toLowerCase().includes(q)
-    );
+    const normalizedQuery = deferredValue.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return users;
+    }
+
+    return users.filter((user) => {
+      const searchableValues: string[] = [
+        user.name,
+        String(user.age),
+        user.location,
+        user.status,
+        user.education,
+        user.profession,
+        user.wali,
+        ...user.deen,
+        ...user.badges,
+      ];
+
+      return searchableValues.some((value) =>
+        value.toLowerCase().includes(normalizedQuery)
+      );
+    });
   }, [deferredValue]);
 
-
+  const trimmedQuery = deferredValue.trim();
+  const resultsMessage = trimmedQuery
+    ? `Showing ${filteredUsers.length} ${
+        filteredUsers.length === 1 ? 'match' : 'matches'
+      } for “${trimmedQuery}”`
+    : 'All available profiles';
 
   const renderItem = ({ item }: { item: IUser }) => (
     <TouchableOpacity activeOpacity={0.9}>
@@ -170,7 +191,16 @@ const Home = () => {
   return (
     <Block safe flex={1} color={colors.background} paddingHorizontal={sizes.padding}>
       {/* Search bar */}
-      <Input search placeholder="Search profiles..." marginBottom={sizes.m} value={query} onChangeText={(text) => setQuery(text)} />
+      <Input
+        search
+        placeholder="Search profiles..."
+        marginBottom={sizes.s}
+        value={query}
+        onChangeText={setQuery}
+      />
+      <Text gray marginBottom={sizes.m} size={sizes.s}>
+        {resultsMessage}
+      </Text>
 
       {/* User List */}
       <FlatList

@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { light } from '../constants';
+import { dark, light } from '../constants';
 import { ITheme, IThemeProvider } from '../constants/types';
 
 export const ThemeContext = React.createContext({
-  theme: light,
+  theme: dark,
   setTheme: () => { },
 });
 
 export const ThemeProvider = ({
   children,
-  theme = light,
+  theme = dark,
   setTheme = () => { },
 }: IThemeProvider) => {
   return (

@@ -34,6 +34,11 @@ export default function Chat() {
 
   const themAvatar = assets.avatar1 ?? assets.avatar2;
 
+  const bubbleMaxWidth =
+    typeof sizes.width === 'number'
+      ? Math.max(0, Math.min(sizes.width * 0.75, sizes.width - sizes.m * 2))
+      : undefined;
+
   // group by date
   const flatData = useMemo(() => {
     const groups: Record<string, Message[]> = {};
@@ -89,7 +94,7 @@ export default function Chat() {
           paddingHorizontal={sizes.sm}
           paddingVertical={sizes.s}
           style={{
-            maxWidth: '75%',
+            maxWidth: bubbleMaxWidth,
             backgroundColor: isMe ? colors.dark : colors.white,
             borderRadius: 16,
             ...(isMe

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import React, { useMemo, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 
-import { Block, Button, Image, Input, Text } from '@/components'
+import { Block, Button, Image, Input, Text } from '@/components';
 import { useTheme } from '@/hooks';
 
 type Sender = 'me' | 'them';
@@ -32,6 +32,11 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>(seed);
   const [text, setText] = useState('');
   const listRef = useRef<FlatList<any>>(null);
+
+  const bubbleMaxWidth =
+    typeof sizes.width === 'number'
+      ? Math.max(0, Math.min(sizes.width * 0.75, sizes.width - sizes.m * 2))
+      : undefined;
 
   // attach avatars from your theme assets
   const meAvatar = assets.avatar2 ?? assets.avatar1;
@@ -85,7 +90,7 @@ export default function Chat() {
           paddingHorizontal={sizes.sm}
           paddingVertical={sizes.s}
           style={{
-            maxWidth: '75%',
+            maxWidth: bubbleMaxWidth,
             backgroundColor: isMe ? colors.dark : colors.white,
             borderRadius: 16,
             ...(isMe

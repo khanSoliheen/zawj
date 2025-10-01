@@ -31,15 +31,5 @@
     ".expo",
     "dist",
     "babel.config.js"
-  ],
-  "rules": {
-    "no-restricted-imports": [
-      "error",
-      {
-        "patterns": [
-          "../*"
-        ]
-      }
-    ]
-  }
+  ]
 }

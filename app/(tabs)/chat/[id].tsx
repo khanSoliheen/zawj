@@ -4,7 +4,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 
 import { Block, Button, Image, Input, Text } from '@/components';
-import { useTheme } from '@/hooks';
+import { useData } from '@/hooks';
 
 type Sender = 'me' | 'them';
 type Message = {
@@ -28,7 +28,8 @@ const fmtTime = (iso: string) =>
   new Date(iso).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
 export default function Chat() {
-  const { colors, sizes, assets, gradients } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes, assets, gradients } = theme;
   const [messages, setMessages] = useState<Message[]>(seed);
   const [text, setText] = useState('');
   const listRef = useRef<FlatList<any>>(null);

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { ScrollView } from "react-native";
 
 import { Block, Text, Input, Button } from "@/components";
-import { useTheme } from "@/hooks";
+import { useData } from "@/hooks";
 
 const Preferences = () => {
-  const { colors, sizes, gradients } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes, gradients } = theme;
 
   const [minAge, setMinAge] = useState("20");
   const [maxAge, setMaxAge] = useState("35");
@@ -27,7 +28,7 @@ const Preferences = () => {
   };
 
   return (
-    <Block safe flex color={colors.background}>
+    <Block safe flex={1} color={colors.background}>
       <ScrollView
         contentContainerStyle={{
           padding: sizes.m,
@@ -106,7 +107,7 @@ const Preferences = () => {
         <Button gradient={gradients.secondary} onPress={applyFilters}>
           <Text white bold>Apply Filters</Text>
         </Button>
-    </ScrollView>
+      </ScrollView>
     </Block >
   );
 };

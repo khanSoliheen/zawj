@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
 import { Block, Text, Input } from '@/components';
-import { useTheme } from '@/hooks';
+import { useData } from '@/hooks';
 
 type IUser = {
   id: string;
@@ -81,7 +81,8 @@ const users: IUser[] = [
 ];
 
 const Home = () => {
-  const { colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes } = theme;
 
   const renderItem = ({ item }: { item: IUser }) => (
     <TouchableOpacity activeOpacity={0.9}>

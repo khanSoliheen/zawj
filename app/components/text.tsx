@@ -3,8 +3,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Platform, StyleSheet, Text, TextStyle } from 'react-native';
 
+import { useData } from "@/hooks";
+
 import { ITextProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 const Typography = (props: ITextProps) => {
   const {
@@ -61,7 +62,8 @@ const Typography = (props: ITextProps) => {
     paddingLeft,
     ...rest
   } = props;
-  const { colors, sizes, lines, weights, fonts } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes, lines, weights, fonts } = theme;
 
   const colorIndex = primary
     ? 'primary'

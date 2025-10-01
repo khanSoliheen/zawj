@@ -11,11 +11,12 @@ import {
   TargetedEvent,
 } from 'react-native';
 
+import { useData } from '@/hooks';
+
 import Block from './block';
 import Text from './text';
 import { WEIGHTS } from '../constants/theme';
 import { IInputProps } from '../constants/types';
-import useTheme from '../hooks/useTheme';
 
 type Props = IInputProps & {
   error?: string;          // NEW: validation message (optional)
@@ -52,7 +53,8 @@ const Input = forwardRef<TextInput, Props>(({
   helperText,
   ...props
 }, ref) => {
-  const { assets, colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { assets, colors, sizes } = theme;
   const [isFocused, setFocused] = useState(false);
 
   const handleFocus = useCallback((event: NativeSyntheticEvent<TargetedEvent>, focus: boolean) => {

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { StatusBar, FlatList, TouchableOpacity } from 'react-native';
 
 import { Block, Image, Text } from '@/components';
-import { useTheme } from '@/hooks';
+import { useData } from '@/hooks';
 
 type ChatItem = {
   id: string;
@@ -41,7 +41,8 @@ const mockChats: ChatItem[] = [
 ];
 
 const ChatList = () => {
-  const { colors, sizes } = useTheme();
+  const { theme } = useData();
+  const { colors, sizes } = theme;
   const router = useRouter();
   useEffect(() => {
     StatusBar.setBarStyle('light-content');

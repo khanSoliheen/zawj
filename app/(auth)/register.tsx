@@ -6,14 +6,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Linking, Platform, TouchableOpacity } from 'react-native';
 import { z } from 'zod';
 
-import Block from '../components/block';
-import Button from '../components/button';
-import Checkbox from '../components/checkbox';
-import Image from '../components/image';
-import Input from '../components/input';
-import Text from '../components/text';
-import { useData } from '../hooks/useData';
-import useTheme from '../hooks/useTheme';
+import { Block, Button, Image, Input, Text } from '@/components';
+import Checkbox from '@/components/checkbox';
+import { useData } from '@/hooks';
+
 
 const isAndroid = Platform.OS === 'android';
 
@@ -47,8 +43,8 @@ const schema = z
 type FormValues = z.infer<typeof schema>;
 
 export default function Login() {
-  const { isDark } = useData()
-  const { colors, gradients, sizes, assets } = useTheme();
+  const { isDark, theme } = useData()
+  const { colors, gradients, sizes, assets } = theme;
   const router = useRouter();
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -85,7 +81,7 @@ export default function Login() {
   };
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block white safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
         <Block flex={0} style={{ zIndex: 0 }}>
           <Image

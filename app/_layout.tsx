@@ -1,16 +1,37 @@
 import { Slot } from 'expo-router';
+import { useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// import { ThemeProvider, useThemeContext } from './theme/context';
-// import './i18n';
+import type { ITheme } from '@/constants/types';
+
+import { DataProvider, useData } from './hooks/useData';
+import { ThemeProvider } from './hooks/useTheme';
+
+const AppContainer = () => {
+  const { theme, setTheme } = useData();
+
+  const handleThemeChange = useCallback(
+    (nextTheme?: ITheme) => {
+      if (nextTheme) {
+        setTheme(nextTheme);
+      }
+    },
+    [setTheme],
+  );
+
+  return (
+    <ThemeProvider theme={theme} setTheme={handleThemeChange}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Slot />
+      </SafeAreaView>
+    </ThemeProvider>
+  );
+};
 
 export default function Layout() {
-  // const { theme } = useThemeContext();
   return (
-    // <ThemeProvider>
-    <SafeAreaView style={{ flex: 1 }}>
-      <Slot />
-    </SafeAreaView>
-    // </ThemeProvider>
+    <DataProvider>
+      <AppContainer />
+    </DataProvider>
   );
 }

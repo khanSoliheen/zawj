@@ -101,7 +101,7 @@ export default function Login() {
             </Text>
           </Button>
         </Block>
-        <TouchableOpacity onPress={() => router.push('/register')}>
+        <TouchableOpacity onPress={() => router.push('/register/step1')}>
           <Block flex={0} row align='center' center marginTop={sizes.s}>
             <Text p semibold marginRight={sizes.s} color={colors.link}>
               Register

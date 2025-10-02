@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { Platform } from 'react-native';
@@ -9,24 +8,31 @@ import { useData } from '@/hooks';
 const isAndroid = Platform.OS === 'android';
 
 const Profile = () => {
-  const user = useMemo(() => ({
-    id: 1,
-    name: 'Your Name',
-    department: 'Software Developer',
-    stats: { posts: 12, followers: 150, following: 80 },
-    about:
-      'This is your personal bio. Share a little bit about yourself here.',
-    avatar:
-      'https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?fit=crop&w=200&q=80',
-  }), []);
+  const user = useMemo(
+    () => ({
+      id: 1,
+      name: 'Your Name',
+      department: 'Software Developer',
+      age: 28,
+      location: 'Bangalore, India',
+      status: 'Single',
+      education: 'B.Tech (Computer Science)',
+      profession: 'Software Engineer',
+      deen: ['5x Salah', 'Qur’an Study', 'Charity Work'],
+      wali: 'Father (verified)',
+      badges: ['Wali Verified', 'ID Verified'],
+      stats: { posts: 12, followers: 150, following: 80 },
+      about:
+        'This is your personal bio. Share a little bit about yourself here.',
+      avatar:
+        'https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?fit=crop&w=200&q=80',
+    }),
+    []
+  );
 
   const router = useRouter();
   const { theme } = useData();
   const { assets, colors, sizes } = theme;
-
-  const IMAGE_VERTICAL_SIZE =
-    (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
-  const IMAGE_MARGIN = (sizes.width - IMAGE_VERTICAL_SIZE * 2 - sizes.padding * 2) / 2;
 
   return (
     <Block color={colors.background} safe marginTop={sizes.md}>
@@ -34,22 +40,21 @@ const Profile = () => {
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: sizes.padding }}>
+        contentContainerStyle={{ paddingBottom: sizes.padding }}
+      >
         <Block flex={0}>
-          {/* Profile header with Settings */}
+          {/* Header with Back + Settings */}
           <Image
             background
             resizeMode="cover"
             padding={sizes.sm}
             paddingBottom={sizes.l}
             radius={sizes.cardRadius}
-            source={assets.background}>
+            source={assets.background}
+          >
             <Block row justify="space-between" align="center">
-              <Button
-                row
-                flex={0}
-                justify="flex-start"
-                onPress={() => router.back()}>
+              {/* Back */}
+              <Button row flex={0} justify="flex-start" onPress={() => router.back()}>
                 <Image
                   radius={0}
                   width={10}
@@ -63,13 +68,18 @@ const Profile = () => {
                 </Text>
               </Button>
 
-              {/* Settings button */}
+              {/* Settings */}
               <Button onPress={() => router.push('/profile/settings')}>
-                <Ionicons name="settings-outline" size={20} color={colors.white} />
+                <Image
+                  source={assets.settings}
+                  width={20}
+                  height={20}
+                  color={colors.white}
+                />
               </Button>
             </Block>
 
-            {/* User details */}
+            {/* Avatar + Name */}
             <Block flex={0} align="center" marginTop={sizes.sm}>
               <Image
                 width={100}
@@ -87,13 +97,14 @@ const Profile = () => {
             </Block>
           </Image>
 
-          {/* profile: stats */}
+          {/* Stats */}
           <Block
             flex={0}
             radius={sizes.sm}
             shadow={!isAndroid}
             marginTop={-sizes.l}
-            marginHorizontal="8%">
+            marginHorizontal="8%"
+          >
             <Block
               row
               blur
@@ -104,7 +115,8 @@ const Profile = () => {
               tint={colors.blurTint}
               justify="space-evenly"
               paddingVertical={sizes.sm}
-              renderToHardwareTextureAndroid>
+              renderToHardwareTextureAndroid
+            >
               <Block align="center">
                 <Text h5>{user?.stats?.posts}</Text>
                 <Text>Posts</Text>
@@ -120,57 +132,46 @@ const Profile = () => {
             </Block>
           </Block>
 
-          {/* profile: about me */}
+          {/* About */}
           <Block paddingHorizontal={sizes.sm}>
-            <Text white h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
+            <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
               About me
             </Text>
-            <Text white p lineHeight={26}>
-              {user?.about}
-            </Text>
+            <Text p lineHeight={26}>{user?.about}</Text>
           </Block>
 
-          {/* profile: photo album */}
-          <Block paddingHorizontal={sizes.sm} marginTop={sizes.s}>
-            <Block row align="center" justify="space-between">
-              <Text white h5 semibold>
-                My Photos
-              </Text>
-              <Button>
-                <Text p primary semibold>
-                  View all
-                </Text>
-              </Button>
+          {/* Profile Details */}
+          <Block paddingHorizontal={sizes.sm} marginTop={sizes.m}>
+            <Text h5 semibold marginBottom={sizes.s}>
+              Profile Details
+            </Text>
+
+            <Text p><Text semibold>Age:</Text> {user.age}</Text>
+            <Text p><Text semibold>Location:</Text> {user.location}</Text>
+            <Text p><Text semibold>Status:</Text> {user.status}</Text>
+            <Text p><Text semibold>Education:</Text> {user.education}</Text>
+            <Text p><Text semibold>Profession:</Text> {user.profession}</Text>
+
+            <Text p semibold marginTop={sizes.s}>Deen Practices:</Text>
+            <Block row wrap="wrap" marginTop={sizes.xs}>
+              {user.deen.map((d, idx) => (
+                <Block
+                  key={idx}
+                  radius={10}
+                  paddingHorizontal={sizes.s}
+                  paddingVertical={sizes.xs}
+                  marginRight={sizes.s}
+                  marginBottom={sizes.xs}
+                  color={colors.light}
+                >
+                  <Text size={sizes.s} gray>{d}</Text>
+                </Block>
+              ))}
             </Block>
-            <Block row justify="space-between" wrap="wrap">
-              <Image
-                resizeMode="cover"
-                source={assets?.photo1}
-                style={{
-                  width: IMAGE_VERTICAL_SIZE + IMAGE_MARGIN / 2,
-                  height: IMAGE_VERTICAL_SIZE * 2 + IMAGE_MARGIN,
-                }}
-              />
-              <Block marginLeft={sizes.m}>
-                <Image
-                  resizeMode="cover"
-                  source={assets?.photo2}
-                  marginBottom={IMAGE_MARGIN}
-                  style={{
-                    height: IMAGE_VERTICAL_SIZE,
-                    width: IMAGE_VERTICAL_SIZE,
-                  }}
-                />
-                <Image
-                  resizeMode="cover"
-                  source={assets?.photo3}
-                  style={{
-                    height: IMAGE_VERTICAL_SIZE,
-                    width: IMAGE_VERTICAL_SIZE,
-                  }}
-                />
-              </Block>
-            </Block>
+
+            <Text p marginTop={sizes.s}>
+              <Text semibold>Wali:</Text> {user.wali}
+            </Text>
           </Block>
         </Block>
       </Block>

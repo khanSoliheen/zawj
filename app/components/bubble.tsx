@@ -42,16 +42,16 @@ export default function Bubble({ m, userId, meAvatar, themAvatar }: Props) {
         flex={0}
         paddingHorizontal={sizes.sm}
         paddingVertical={sizes.s}
+        color={isMe ? colors.facebook : colors.secondary}
+        radius={sizes.sm}
         style={{
           maxWidth: sizes.width * 0.75,
-          backgroundColor: isMe ? colors.dark : colors.white,
-          borderRadius: 16,
           ...(isMe
             ? { borderTopRightRadius: 4 }
             : { borderTopLeftRadius: 4, borderWidth: 1, borderColor: colors.gray }),
         }}
       >
-        <Text color={isMe ? colors.white : colors.text}>{text}</Text>
+        <Text white>{text}</Text>
       </Block>
 
       {isMe && (

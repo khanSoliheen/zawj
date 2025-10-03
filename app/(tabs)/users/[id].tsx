@@ -1,0 +1,175 @@
+import { router } from 'expo-router';
+import { useSearchParams } from 'expo-router/build/hooks';
+import React, { useEffect, useState } from 'react';
+
+import { Block, Button, Image, Text } from '@/components';
+import { useAuth, useData, useToast } from '@/hooks';
+import { RegistrationData } from '@/store/registration';
+import { supabase } from '@/utils/supabase';
+import { Utils } from '@/utils/utils';
+
+
+const Profile = () => {
+  const { theme } = useData();
+  const params = useSearchParams();
+  const id = params.get('id');
+  const { currentUser } = useAuth();
+  const { show } = useToast();
+  const { assets, colors, sizes, gradients } = theme;
+
+  const [userDetails, setUserDetails] = useState<RegistrationData | null>(null);
+
+  useEffect(() => {
+    async function getUserDetails() {
+      if (!id) return;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        show("error", error.message)
+      } else {
+        setUserDetails(data);
+      }
+    }
+    getUserDetails();
+  }, [show, id]);
+
+  const nikahRequestHandler = async () => {
+    if (!currentUser) return;
+
+    // 1. Check if conversation exists
+    const { data } = await supabase
+      .from("conversations")
+      .select("id")
+      .or(`and(user1.eq.${currentUser.id},user2.eq.${id}),and(user1.eq.${id},user2.eq.${currentUser.id})`)
+      .maybeSingle();
+
+    let conversationId = data?.id;
+
+    // 2. If not exists, create new conversation
+    if (!conversationId) {
+      const { data: newConv, error: insertError } = await supabase
+        .from("conversations")
+        .insert({
+          user1: currentUser.id,
+          user2: id,
+        })
+        .select("id")
+        .single();
+
+      if (insertError) {
+        console.error("Error creating conversation:", insertError.message);
+        return;
+      }
+
+      conversationId = newConv.id;
+    }
+    // 3. Navigate to chat screen
+    router.push(`/chat/${conversationId}`);
+  };
+
+  const fullName = `${userDetails?.firstName || ''} ${userDetails?.lastName || ''}`.trim();
+
+  return (
+    <Block safe flex={1} color={colors.background}>
+      {/* Scrollable Content */}
+      <Block scroll contentContainerStyle={{ paddingBottom: sizes.xxl }} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <Image
+          background
+          resizeMode="cover"
+          padding={sizes.sm}
+          paddingBottom={sizes.l}
+          radius={sizes.cardRadius}
+          source={assets.background}
+        >
+          <Block row justify="space-between" align="center" marginTop={10}>
+            <Button row flex={0} justify="flex-start" onPress={() => router.back()}>
+              <Image
+                radius={0}
+                width={10}
+                height={18}
+                color={colors.white}
+                source={assets.arrow}
+                transform={[{ rotate: '180deg' }]}
+              />
+              <Text p white marginLeft={sizes.s}>
+                Back
+              </Text>
+            </Button>
+          </Block>
+
+          {/* Avatar + Name */}
+          <Block flex={0} align="center" marginTop={sizes.sm}>
+            <Image
+              width={100}
+              height={100}
+              radius={50}
+              marginBottom={sizes.sm}
+              source={assets.avatar1}
+            />
+            <Text h5 center white>
+              {fullName}
+            </Text>
+            <Text p center white>
+              {userDetails?.gender}, {Utils.getAge(userDetails?.designation)} years
+            </Text>
+          </Block>
+        </Image>
+
+        {/* About */}
+        <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
+          <Text h5 semibold marginBottom={sizes.s}>
+            About Me
+          </Text>
+          <Text p lineHeight={26}>{"Hey I am a Software Engineer"}</Text>
+        </Block>
+
+        {/* Details */}
+        <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
+          <Text h5 semibold marginBottom={sizes.s}>Profile Details</Text>
+          <Text p><Text semibold>Location:</Text> {userDetails?.state}</Text>
+          <Text p><Text semibold>Education:</Text> {userDetails?.education}</Text>
+          <Text p><Text semibold>Profession:</Text> {userDetails?.department}</Text>
+        </Block>
+
+        {/* Deen Practices */}
+        <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
+          <Text h5 semibold marginBottom={sizes.s}>Deen Practices</Text>
+          {/*{userDetails.deen.map((d, i) => (
+            <Text p key={i}>• {d}</Text>
+          ))}*/}
+          <Text p>Prayer: {userDetails?.prayerRegularity}</Text>
+          <Text p>Qur’an Level: {userDetails?.quranLevel}</Text>
+          <Text p>{userDetails?.gender === 'Female' ? 'Hijab' : 'Beard'}: {userDetails?.hijabOrBeard}</Text>
+        </Block>
+      </Block>
+
+      {/* Fixed Proposal Button */}
+      <Block
+        flex={0}
+        style={{
+          position: 'absolute',
+          bottom: 10,
+          right: 10,
+        }}
+      >
+        <Button
+          gradient={gradients.secondary}
+          radius={30}
+          paddingHorizontal={sizes.sm}
+          onPress={nikahRequestHandler}
+        >
+          <Text color={colors.text} center semibold>
+            Nikah Proposal
+          </Text>
+        </Button>
+      </Block>
+    </Block>
+  );
+};
+
+export default Profile;

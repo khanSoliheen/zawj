@@ -1,22 +1,28 @@
 import { create } from 'zustand';
 
-interface RegistrationData {
+export interface RegistrationData {
   // Step 1
-  fullName?: string;
-  email?: string;
-  phone?: string;
-  password?: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
 
   // Step 2
-  gender?: 'male' | 'female';
-  dob?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  nationality?: string;
+  gender: 'Male' | 'Female';
+  dob: string;
+  country: string;
+  state: string;
+  city: string;
+  education: string;
+  employmentType: string;
+  designation: string;
+  department: string;
+
 
   // Step 3
-  maritalStatus?: 'single' | 'divorced' | 'widowed';
+  maritalStatus: 'Single' | 'Married' | 'Divorced' | 'Widowed';
   waliName?: string;
   waliRelation?: string;
   waliContact?: string;
@@ -25,13 +31,13 @@ interface RegistrationData {
 
 
   // Step 4
-  prayerRegularity?: '5x daily' | 'sometimes' | 'rarely';
-  quranLevel?: string;
-  hijabOrBeard?: 'Yes' | 'No' | 'Hijab Rarely';
+  prayerRegularity: '5x daily' | 'Regularly' | 'Sometimes' | 'Rarely' | 'Never';
+  quranLevel: string;
+  hijabOrBeard: 'Yes' | 'No' | 'Sometimes';
 
   // Step 5
-  termsAccepted?: boolean;
-  islamicPolicyAccepted?: boolean;
+  termsAccepted: boolean;
+  islamicPolicyAccepted: boolean;
 }
 
 interface RegistrationStore {
@@ -41,8 +47,54 @@ interface RegistrationStore {
 }
 
 export const useRegistrationStore = create<RegistrationStore>((set) => ({
-  data: {},
+  data: {
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    password: '',
+    gender: 'Male',
+    dob: '',
+    country: '',
+    state: '',
+    city: '',
+    education: '',
+    employmentType: '',
+    designation: '',
+    department: '',
+    maritalStatus: 'Single',
+    prayerRegularity: '5x daily',
+    quranLevel: '',
+    hijabOrBeard: 'Yes',
+    termsAccepted: false,
+    islamicPolicyAccepted: false,
+  },
   setData: (values) =>
     set((state) => ({ data: { ...state.data, ...values } })),
-  reset: () => set({ data: {} }),
+  reset: () => set({
+    data: {
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      gender: 'Male',
+      dob: '',
+      country: '',
+      state: '',
+      city: '',
+      education: '',
+      employmentType: '',
+      designation: '',
+      department: '',
+      maritalStatus: 'Single',
+      prayerRegularity: '5x daily',
+      quranLevel: '',
+      hijabOrBeard: 'Yes',
+      termsAccepted: false,
+      islamicPolicyAccepted: false,
+    }
+  }),
 }));

@@ -1,12 +1,19 @@
 import { router } from "expo-router";
 
+import { showToaster } from "@/common/commonUtils";
 import { Block, Button, Text, Image, Switch } from "@/components";
 import { useData } from "@/hooks";
+import { supabase } from "@/utils/supabase";
 
 export default function Settings() {
   const { isDark, handleIsDark, theme } = useData();
   const { colors, sizes, assets } = theme;
 
+  const logoutHandler = () => {
+    router.push("/login");
+    supabase.auth.signOut();
+    showToaster("Logout Successful");
+  };
   return (
     <Block safe flex={1} color={colors.background} paddingHorizontal={sizes.padding}>
       {/* Header */}
@@ -69,7 +76,7 @@ export default function Settings() {
           />
         </Block>
 
-        <Button row justify="space-between" align="center" paddingVertical={sizes.sm} onPress={() => alert("Log out")}>
+        <Button row justify="space-between" align="center" paddingVertical={sizes.sm} onPress={logoutHandler}>
           <Text p color={colors.danger}>
             Log out
           </Text>

@@ -5,12 +5,12 @@ import React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Block, Button, Image, Input, Text } from '@/components';
+import { Block, Button, Image, Input, SelectInput, Text } from '@/components';
 import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
 
 const schema = z.object({
-  maritalStatus: z.enum(['single', 'divorced', 'widowed'], { error: 'Please select a marital status' }),
+  maritalStatus: z.enum(['Single', 'Married', 'Divorced', 'Widowed'], { error: 'Please select a marital status' }),
   waliName: z.string().optional(),
   waliRelation: z.string().optional(),
   waliContact: z.string().optional(),
@@ -43,8 +43,8 @@ export default function Step3() {
   };
 
   return (
-    <Block safe color={colors.background} marginTop={sizes.md}>
-      <Block paddingHorizontal={sizes.s}>
+    <Block safe keyboard color={colors.background} >
+      <Block scroll paddingHorizontal={sizes.s} showsVerticalScrollIndicator={false}>
         {/* Back + Title */}
         <Block row flex={0} align="center" justify="flex-start" marginBottom={sizes.md}>
           <Button onPress={() => router.back()} row flex={0} align="center" justify="center">
@@ -66,25 +66,19 @@ export default function Step3() {
             control={control}
             name="maritalStatus"
             render={({ field, fieldState }) => (
-              <Input
-                id="maritalStatus"
+              <SelectInput
                 label="Marital Status"
-                autoCapitalize="none"
+                options={['Single', 'Married', 'Divorced', 'Widowed']}
                 value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
+                onChange={field.onChange}
                 error={fieldState.error?.message}
-                success={dirtyFields.maritalStatus && !errors.maritalStatus}
-                placeholder="single / divorced / widowed"
-                marginBottom={12}
               />
             )}
           />
         </Block>
 
         {/* Wali Name */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
             name="waliName"
@@ -106,7 +100,7 @@ export default function Step3() {
         </Block>
 
         {/* Wali Relation */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
             name="waliRelation"
@@ -128,7 +122,7 @@ export default function Step3() {
         </Block>
 
         {/* Wali Contact */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
             name="waliContact"
@@ -151,9 +145,9 @@ export default function Step3() {
         </Block>
 
         {/* Conditional Children Info */}
-        {(maritalStatus === 'divorced' || maritalStatus === 'widowed') && (
+        {(maritalStatus === 'Divorced' || maritalStatus === 'Widowed') && (
           <>
-            <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+            <Block flex={0} style={{ zIndex: 0 }} >
               <Controller
                 control={control}
                 name="childrenCount"
@@ -175,7 +169,7 @@ export default function Step3() {
               />
             </Block>
 
-            <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+            <Block flex={0} style={{ zIndex: 0 }} >
               <Controller
                 control={control}
                 name="childrenDetails"
@@ -199,7 +193,7 @@ export default function Step3() {
         )}
 
         {/* Next Button */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Button onPress={handleSubmit(onSubmit)} gradient={gradients.primary}>
             <Text white>Next</Text>
           </Button>

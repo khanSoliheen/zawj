@@ -4,7 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { ITheme } from '@/constants/types';
 
+import { ToastProvider } from './hooks/toaster';
 import { DataProvider, useData } from './hooks/useData';
+import { AuthProvider } from './hooks/userContext';
 import { ThemeProvider } from './hooks/useTheme';
 
 const AppContainer = () => {
@@ -30,8 +32,12 @@ const AppContainer = () => {
 
 export default function Layout() {
   return (
-    <DataProvider>
-      <AppContainer />
-    </DataProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <DataProvider>
+          <AppContainer />
+        </DataProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }

@@ -9,6 +9,7 @@ import { Block, Button, Image, Text } from '@/components';
 import Checkbox from '@/components/checkbox';
 import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
+import { supabase } from '@/utils/supabase';
 
 const schema = z.object({
   termsAccepted: z.literal(true, { error: 'You must accept the Terms' }),
@@ -35,15 +36,41 @@ export default function Step5() {
   const onSubmit = async (values: FormValues) => {
     setData(values);
     const finalPayload = { ...data, ...values };
-    console.log("Submitting to backend:", finalPayload);
 
-    // TODO: call API
+    // 1. Create user in auth
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email: finalPayload.email,
+      password: finalPayload.password,
+    });
+
+    if (signUpError) {
+      alert(signUpError.message);
+      return;
+    }
+
+    // 2. Get user id from auth
+    const userId = signUpData.user?.id;
+    if (!userId) {
+      alert("User not created properly.");
+      return;
+    }
+
+    // 3. Insert profile (must use the same userId!)
+    const { error: profileError } = await supabase.from("profiles").insert({ ...finalPayload, id: userId });
+
+    if (profileError) {
+      alert(profileError.message);
+      return;
+    }
+
+    // 4. Done → redirect
     reset();
-    router.replace('/login'); // go to main app
+    router.replace("/login");
   };
 
+
   return (
-    <Block safe color={colors.background} marginTop={sizes.md}>
+    <Block safe color={colors.background} >
       <Block paddingHorizontal={sizes.s}>
         <Block row flex={0} align="center" justify="flex-start" marginBottom={sizes.md}>
           {/* Back button */}
@@ -94,7 +121,7 @@ export default function Step5() {
         </Block>
 
         {/* Islamic Policy */}
-        <Block row flex={0} center style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block row flex={0} center style={{ zIndex: 0 }} >
           <Controller
             control={control}
             name="islamicPolicyAccepted"

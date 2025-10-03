@@ -1,38 +1,55 @@
-import { useRouter } from 'expo-router';
-import React, { useMemo } from 'react';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
 import { Block, Button, Image, Text } from '@/components';
-import { useData } from '@/hooks';
+import { useAuth, useData, useToast } from '@/hooks';
+import { RegistrationData } from '@/store/registration';
+import { supabase } from '@/utils/supabase';
 
 const isAndroid = Platform.OS === 'android';
 
-const Profile = () => {
-  const user = useMemo(
-    () => ({
-      id: 1,
-      name: 'Your Name',
-      department: 'Software Developer',
-      age: 28,
-      location: 'Bangalore, India',
-      status: 'Single',
-      education: 'B.Tech (Computer Science)',
-      profession: 'Software Engineer',
-      deen: ['5x Salah', 'Qur’an Study', 'Charity Work'],
-      wali: 'Father (verified)',
-      badges: ['Wali Verified', 'ID Verified'],
-      stats: { posts: 12, followers: 150, following: 80 },
-      about:
-        'This is your personal bio. Share a little bit about yourself here.',
-      avatar:
-        'https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?fit=crop&w=200&q=80',
-    }),
-    []
-  );
+function getAge(dob?: string) {
+  if (!dob) return '—';
+  const birth = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  if (
+    today.getMonth() < birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
+  ) {
+    age--;
+  }
+  return age;
+}
 
-  const router = useRouter();
+const Profile = () => {
   const { theme } = useData();
+  const { currentUser } = useAuth();
+  const { show } = useToast();
   const { assets, colors, sizes } = theme;
+
+  const [profile, setProfile] = useState<RegistrationData | null>(null);
+
+  useEffect(() => {
+    async function getUserDetails() {
+      if (!currentUser?.id) return;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (error) {
+        show("error", error.message);
+      } else {
+        setProfile(data);
+      }
+    }
+    getUserDetails();
+  }, [show, currentUser]);
+
+  const fullName = `${profile?.firstName || ''} ${profile?.lastName || ''}`.trim();
 
   return (
     <Block color={colors.background} safe marginTop={sizes.md}>
@@ -86,13 +103,13 @@ const Profile = () => {
                 height={100}
                 radius={50}
                 marginBottom={sizes.sm}
-                source={{ uri: user?.avatar }}
+                source={assets.avatar1}
               />
               <Text h5 center white>
-                {user?.name}
+                {fullName || 'Anonymous'}
               </Text>
               <Text p center white>
-                {user?.department}
+                {profile?.designation}
               </Text>
             </Block>
           </Image>
@@ -118,15 +135,15 @@ const Profile = () => {
               renderToHardwareTextureAndroid
             >
               <Block align="center">
-                <Text h5>{user?.stats?.posts}</Text>
+                <Text h5>{10}</Text>
                 <Text>Posts</Text>
               </Block>
               <Block align="center">
-                <Text h5>{user?.stats?.followers}</Text>
+                <Text h5>{0}</Text>
                 <Text>Followers</Text>
               </Block>
               <Block align="center">
-                <Text h5>{user?.stats?.following}</Text>
+                <Text h5>{0}</Text>
                 <Text>Following</Text>
               </Block>
             </Block>
@@ -137,7 +154,7 @@ const Profile = () => {
             <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
               About me
             </Text>
-            <Text p lineHeight={26}>{user?.about}</Text>
+            <Text p lineHeight={26}>{profile?.waliName}</Text>
           </Block>
 
           {/* Profile Details */}
@@ -146,15 +163,15 @@ const Profile = () => {
               Profile Details
             </Text>
 
-            <Text p><Text semibold>Age:</Text> {user.age}</Text>
-            <Text p><Text semibold>Location:</Text> {user.location}</Text>
-            <Text p><Text semibold>Status:</Text> {user.status}</Text>
-            <Text p><Text semibold>Education:</Text> {user.education}</Text>
-            <Text p><Text semibold>Profession:</Text> {user.profession}</Text>
+            <Text p><Text semibold>Age:</Text> {getAge(profile?.dob)}</Text>
+            <Text p><Text semibold>Location:</Text> {profile?.city}, {profile?.country}</Text>
+            <Text p><Text semibold>Status:</Text> {profile?.maritalStatus}</Text>
+            <Text p><Text semibold>Education:</Text> {"B.tech"}</Text>
+            <Text p><Text semibold>Profession:</Text> {"software"}</Text>
 
             <Text p semibold marginTop={sizes.s}>Deen Practices:</Text>
-            <Block row wrap="wrap" marginTop={sizes.xs}>
-              {user.deen.map((d, idx) => (
+            {/*<Block row wrap="wrap" marginTop={sizes.xs}>
+              {profile.deen?.map((d: string, idx: number) => (
                 <Block
                   key={idx}
                   radius={10}
@@ -167,11 +184,17 @@ const Profile = () => {
                   <Text size={sizes.s} gray>{d}</Text>
                 </Block>
               ))}
-            </Block>
+            </Block>*/}
 
             <Text p marginTop={sizes.s}>
-              <Text semibold>Wali:</Text> {user.wali}
+              <Text semibold>Wali:</Text> {profile?.waliName} ({profile?.waliRelation})
             </Text>
+
+            {/*{profile. === 'verified' && (*/}
+            <Text p color={colors.primary} marginTop={sizes.s}>
+              ✅ ID Verified
+            </Text>
+            {/*)}*/}
           </Block>
         </Block>
       </Block>

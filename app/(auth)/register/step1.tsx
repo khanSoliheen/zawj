@@ -13,7 +13,8 @@ import { useRegistrationStore } from '@/store/registration';
 const isAndroid = Platform.OS === 'android';
 
 const schema = z.object({
-  fullName: z.string().min(4, 'Enter your full name'),
+  firstName: z.string().min(4, 'Enter your first name'),
+  lastName: z.string().min(4, 'Enter your last name'),
   email: z.email('Enter valid email'),
   phone: z.string().min(10, 'Enter valid phone'),
   password: z.string().min(6, 'Min 6 characters'),
@@ -53,8 +54,8 @@ export default function Step1() {
   };
 
   return (
-    <Block safe color={colors.background} marginTop={sizes.md}>
-      <Block paddingHorizontal={sizes.s}>
+    <Block safe keyboard color={colors.background} marginTop={sizes.md}>
+      <Block scroll paddingHorizontal={sizes.s} showsVerticalScrollIndicator={false}>
         <Block row flex={0} align="center" justify="flex-start" marginBottom={sizes.md}>
           {/* Back button */}
           <Button
@@ -80,24 +81,48 @@ export default function Step1() {
           </Text>
         </Block>
 
-        {/* Full Name */}
+        {/* First Name */}
         <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
-            name="fullName"
+            name="firstName"
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
-                id="fullName"
-                label="Full Name"
+                id="firstName"
+                label="First Name"
                 autoCapitalize="words"
                 autoCorrect={false}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 ref={ref}
-                error={errors.fullName?.message}
-                success={dirtyFields.fullName && !errors.fullName}
-                placeholder="your full name"
+                error={errors.firstName?.message}
+                success={dirtyFields.firstName && !errors.firstName}
+                placeholder="your first name"
+                marginBottom={12}
+              />
+            )}
+          />
+        </Block>
+
+        {/* Last Name */}
+        <Block flex={0} style={{ zIndex: 0 }}>
+          <Controller
+            control={control}
+            name="lastName"
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <Input
+                id="lastName"
+                label="Last Name"
+                autoCapitalize="words"
+                autoCorrect={false}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                ref={ref}
+                error={errors.lastName?.message}
+                success={dirtyFields.lastName && !errors.lastName}
+                placeholder="your last name"
                 marginBottom={12}
               />
             )}
@@ -105,7 +130,7 @@ export default function Step1() {
         </Block>
 
         {/* Email */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
             name="email"
@@ -130,7 +155,7 @@ export default function Step1() {
         </Block>
 
         {/* Phone */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
             name="phone"
@@ -154,7 +179,7 @@ export default function Step1() {
         </Block>
 
         {/* Password */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
             name="password"
@@ -177,7 +202,7 @@ export default function Step1() {
         </Block>
 
         {/* Confirm Password */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
             name="confirmPassword"
@@ -200,7 +225,7 @@ export default function Step1() {
         </Block>
 
         {/* Next Button */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Button
             disabled={isSubmitting}
             shadow={!isAndroid}

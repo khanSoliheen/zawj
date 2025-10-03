@@ -33,13 +33,14 @@ const Modal = ({
       animationType="slide"
       onRequestClose={onRequestClose}>
       <Block justify="flex-end">
-        <Block safe card flex={0} color="rgba(0,0,0,0.8)">
+        <Block safe card flex={0} color={colors.card}>
           <Button
             top={0}
             right={0}
             position="absolute"
+            onPress={onRequestClose}
           >
-            <Image source={assets.close} color={colors.white} />
+            <Image source={assets.close} color={colors.text} />
           </Button>
           <Block
             flex={0}

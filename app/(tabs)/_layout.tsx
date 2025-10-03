@@ -1,47 +1,102 @@
-import { Tabs } from "expo-router";
+// app/(tabs)/_layout.tsx
+import { Tabs } from 'expo-router';
+import React from 'react';
 
-import { Image } from "@/components";
-import { useData } from "@/hooks";
+import { Image } from '@/components';
+import { useData } from '@/hooks';
 
-// import { Ionicons } from "@expo/vector-icons";
-export default function AuthLayout() {
+export default function TabsLayout() {
   const { theme } = useData();
-  const { assets, colors } = theme;
+  const { colors, assets } = theme;
+
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="home" options={{
-        tabBarIcon: () => {
-          return <Image source={assets.home} color={colors.gray} />
-        }
-      }} />
-      <Tabs.Screen name="chat" options={{
-        tabBarIcon: () => {
-          return <Image source={assets.chat} color={colors.gray} />
-        },
-        title: 'Chat'
-      }} />
-      <Tabs.Screen name="preferences" options={{
-        tabBarIcon: () => {
-          return <Image source={assets.extras} color={colors.gray} />
-        },
-      }} />
-      <Tabs.Screen name="profile" options={{
-        tabBarIcon: () => {
-          return <Image source={assets.profile} color={colors.gray} />
-        },
-        title: 'Profile'
-      }} />
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary as string,
+        tabBarInactiveTintColor: colors.gray as string,
+        tabBarStyle: { backgroundColor: colors.card as string },
+      }}
+    >
+      {/* Home */}
       <Tabs.Screen
-        name="chat/[id]"
+        name="users/index"
         options={{
-          href: null, // ❌ remove from tab bar
+          title: 'Home',
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={assets.home}
+              color={color}
+              width={22}
+              height={22}
+              radius={0}
+            />
+          ),
         }}
       />
-      {/*<Tabs.Screen name="Settings" options={{
-        tabBarIcon: ({ focused }) => {
-          return <Image source={assets.settings} color={colors.gray} />
-        }
-      }} />*/}
+
+      {/* Chat */}
+      <Tabs.Screen
+        name="chat/index"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={assets.chat}
+              color={color}
+              width={22}
+              height={22}
+              radius={0}
+            />
+          ),
+        }}
+      />
+
+      {/* Preferences */}
+      <Tabs.Screen
+        name="preferences"
+        options={{
+          title: 'Preferences',
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={assets.extras}
+              color={color}
+              width={22}
+              height={22}
+              radius={0}
+            />
+          ),
+        }}
+      />
+
+      {/* Settings */}
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <Image
+              source={assets.profile}
+              color={color}
+              width={22}
+              height={22}
+              radius={0}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="users/[id]"
+        options={{ href: null }}   // ❌ removes from tab bar
+      />
+      <Tabs.Screen
+        name="chat/[id]"
+        options={{ href: null }}   // ❌ removes from tab bar
+      />
+      <Tabs.Screen
+        name="profile/settings"
+        options={{ href: null }}   // ❌ removes from tab bar
+      />
     </Tabs>
-  )
+  );
 }

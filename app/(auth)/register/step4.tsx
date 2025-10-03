@@ -5,14 +5,14 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Block, Button, Image, Input, Text } from '@/components';
+import { Block, Button, Image, Input, SelectInput, Text } from '@/components';
 import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
 
 const schema = z.object({
-  prayerRegularity: z.enum(['5x daily', 'sometimes', 'rarely'], { error: 'Please add 5x daily, sometimes, rarely' }),
-  quranLevel: z.string().min(2, 'Please enter your Qur\'an level'),
-  hijabOrBeard: z.enum(['Yes', 'No', 'Hijab Rarely'], { error: 'Please add Yes, No, Hijab Rarely' }),
+  prayerRegularity: z.enum(['5x daily', 'Regularly', 'Sometimes', 'Rarely', 'Never'], { error: 'Please select 5x daily, regularly, sometimes, rarely, never' }),
+  quranLevel: z.string().min(4, 'Please enter your Qur\'an level'),
+  hijabOrBeard: z.enum(['Yes', 'No', 'Sometimes'], { error: 'Please select Yes, No, Sometimes, Rarely, Never' }),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -38,8 +38,8 @@ export default function Step4() {
   };
 
   return (
-    <Block safe color={colors.background} marginTop={sizes.md}>
-      <Block paddingHorizontal={sizes.s}>
+    <Block safe keyboard color={colors.background} >
+      <Block scroll paddingHorizontal={sizes.s} showsVerticalScrollIndicator={false}>
         <Block row flex={0} align="center" justify="flex-start" marginBottom={sizes.md}>
           {/* Back button */}
           <Button
@@ -69,24 +69,19 @@ export default function Step4() {
             control={control}
             name="prayerRegularity"
             render={({ field, fieldState }) => (
-              <Input
-                id="prayerRegularity"
+              <SelectInput
                 label="Prayer Regularity"
+                options={['5x daily', 'Regularly', 'Sometimes', 'Rarely', 'Never']}
                 value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
+                onChange={field.onChange}
                 error={fieldState.error?.message}
-                success={dirtyFields.prayerRegularity && !errors.prayerRegularity}
-                placeholder="5x daily / sometimes / rarely"
-                marginBottom={12}
               />
             )}
           />
         </Block>
 
         {/* Quran Level */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
             name="quranLevel"
@@ -108,29 +103,24 @@ export default function Step4() {
         </Block>
 
         {/* Hijab or Beard */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
             name="hijabOrBeard"
             render={({ field, fieldState }) => (
-              <Input
-                id="hijabOrBeard"
+              <SelectInput
                 label="Hijab (for women) / Beard (for men)"
+                options={['Yes', 'No', 'Sometimes']}
                 value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
+                onChange={field.onChange}
                 error={fieldState.error?.message}
-                success={dirtyFields.hijabOrBeard && !errors.hijabOrBeard}
-                placeholder="Yes / No / Hijab Rarely"
-                marginBottom={12}
               />
             )}
           />
         </Block>
 
         {/* Next Button */}
-        <Block flex={0} style={{ zIndex: 0 }} marginTop={sizes.md}>
+        <Block flex={0} style={{ zIndex: 0 }} >
           <Button onPress={handleSubmit(onSubmit)} gradient={gradients.primary}>
             <Text white>Next</Text>
           </Button>

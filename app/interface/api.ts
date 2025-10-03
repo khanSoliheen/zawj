@@ -41,4 +41,4 @@ export interface AuthResponse {
 export interface UpdateProfileData {
   firstName?: string;
   lastName?: string;
-} 
+}

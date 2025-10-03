@@ -7,7 +7,9 @@ import { z } from 'zod';
 
 
 import { Block, Button, Image, Input, Text } from '@/components';
-import { useData } from '@/hooks';
+import { useAuth, useData, useToast } from '@/hooks';
+import { supabase } from '@/utils/supabase';
+
 
 const isAndroid = Platform.OS === 'android';
 const schema = z.object({
@@ -18,11 +20,13 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function Login() {
+  const { setCurrentUser } = useAuth();
   const { theme } = useData();
-  const { colors, gradients, sizes, assets } = theme;
-
   // const { t } = useTranslation();
   const router = useRouter();
+  const { show } = useToast();
+  const { colors, gradients, sizes, assets } = theme;
+
 
   const {
     control,
@@ -35,9 +39,20 @@ export default function Login() {
     defaultValues: { email: '', password: '' },
   });
 
-  const onSubmit = (formData: FormValues) => {
-    console.log(formData);
-    router.push('/home');
+  const onSubmit = async ({ email, password }: FormValues) => {
+    const { data: response, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (response) {
+      const { user } = response;
+      if (user) {
+        setCurrentUser(user);
+        show("success", "You have successfully logged in.");
+        router.push(`/users`);
+      }
+    }
+    if (error) {
+      show("error", error.message);
+      return;
+    }
   };
 
   return (
@@ -101,7 +116,7 @@ export default function Login() {
             </Text>
           </Button>
         </Block>
-        <TouchableOpacity onPress={() => router.push('/register')}>
+        <TouchableOpacity onPress={() => router.push('/register/step1')}>
           <Block flex={0} row align='center' center marginTop={sizes.s}>
             <Text p semibold marginRight={sizes.s} color={colors.link}>
               Register

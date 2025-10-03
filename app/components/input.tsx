@@ -51,6 +51,7 @@ const Input = forwardRef<TextInput, Props>(({
   onBlur,
   error,
   helperText,
+  editable,
   ...props
 }, ref) => {
   const { theme } = useData();
@@ -148,7 +149,7 @@ const Input = forwardRef<TextInput, Props>(({
           {...inputID}
           {...props}
           style={inputStyles}
-          editable={!disabled}
+          editable={editable}
           placeholderTextColor={inputColor}
           onFocus={(event) => handleFocus(event, true)}
           onBlur={(event) => handleFocus(event, false)}

@@ -1,9 +1,10 @@
-import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
-import { StatusBar, FlatList, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { StatusBar, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import { Block, Image, Text } from '@/components';
-import { useData } from '@/hooks';
+import { useAuth, useData } from '@/hooks';
+import { supabase } from '@/utils/supabase';
 
 type ChatItem = {
   id: string;
@@ -11,45 +12,73 @@ type ChatItem = {
   lastMessage: string;
   time: string;
   avatar: any;
-  unread?: number;
 };
-
-const mockChats: ChatItem[] = [
-  {
-    id: '1',
-    name: 'John Doe',
-    lastMessage: 'Hey, how are you?',
-    time: '10:24 AM',
-    avatar: require('@/assets/images/avatar1.png'),
-    unread: 2,
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    lastMessage: 'See you tomorrow!',
-    time: '09:15 AM',
-    avatar: require('@/assets/images/avatar1.png'),
-  },
-  {
-    id: '3',
-    name: 'Dev Group',
-    lastMessage: 'Let’s deploy tonight 🚀',
-    time: 'Yesterday',
-    avatar: require('@/assets/images/avatar1.png'),
-    unread: 5,
-  },
-];
 
 const ChatList = () => {
   const { theme } = useData();
+  const { currentUser } = useAuth();
   const { colors, sizes } = theme;
-  const router = useRouter();
+
+  const [chats, setChats] = useState<ChatItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const staticAvatar = require('@/assets/images/avatar1.png'); // ✅ single fallback image
+  const userId = currentUser?.id;
   useEffect(() => {
     StatusBar.setBarStyle('light-content');
-    return () => {
-      StatusBar.setBarStyle('dark-content');
-    };
+    return () => StatusBar.setBarStyle('dark-content');
   }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchChats = async () => {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from('conversations')
+        .select(`
+          id,
+          user1,
+          user2,
+          user1_profile:user1(firstName, lastName),
+          user2_profile:user2(firstName, lastName),
+          messages(content, created_at)
+        `)
+        .or(`user1.eq.${userId},user2.eq.${userId}`)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.log('fetchChats error:', error.message);
+        setChats([]);
+      } else if (data) {
+        const formatted = data.map((c: any) => {
+          const isUser1 = c.user1 === userId;
+          const other = isUser1 ? c.user2_profile : c.user1_profile;
+
+          const sortedMessages = [...(c.messages ?? [])].sort(
+            (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+
+          const lastMessage = sortedMessages[sortedMessages.length - 1];
+          return {
+            id: c.id,
+            name: other?.full_name || 'User',
+            lastMessage: lastMessage?.content || 'No messages yet',
+            time: lastMessage
+              ? new Date(lastMessage.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              : '',
+            avatar: staticAvatar, // ✅ use static placeholder
+          };
+        });
+        setChats(formatted);
+      }
+
+      setLoading(false);
+    };
+
+    fetchChats();
+  }, [staticAvatar, userId]);
 
   const renderItem = ({ item }: { item: ChatItem }) => (
     <TouchableOpacity onPress={() => router.push(`/chat/${item.id}`)} activeOpacity={0.8}>
@@ -75,34 +104,41 @@ const ChatList = () => {
           <Text gray numberOfLines={1}>{item.lastMessage}</Text>
         </Block>
 
-        {/* Time + unread badge */}
-        <Block align="flex-end" marginLeft={sizes.sm}>
-          <Text gray>{item.time}</Text>
-          {item.unread ? (
-            <Block
-              center
-              align="center"
-              radius={12}
-              paddingHorizontal={sizes.s}
-              style={{
-                backgroundColor: colors.primary,
-                marginTop: sizes.s,
-                minWidth: 24,
-              }}>
-              <Text white bold size={sizes.s}>
-                {item.unread}
-              </Text>
-            </Block>
-          ) : null}
-        </Block>
+        {/* Time */}
+        {item.time ? (
+          <Block align="flex-end" marginLeft={sizes.sm}>
+            <Text gray>{item.time}</Text>
+          </Block>
+        ) : null}
       </Block>
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <Block safe flex={1} color={colors.background} center align="center" justify="center">
+        <ActivityIndicator size="large" color={colors.primary} />
+      </Block>
+    );
+  }
+
+  if (chats.length === 0) {
+    return (
+      <Block safe flex={1} color={colors.background} center justify="center" align="center">
+        <Image
+          source={require('@/assets/images/avatar2.png')}
+          style={{ width: 120, height: 120, marginBottom: sizes.m }}
+        />
+        <Text h6 gray>No conversations yet</Text>
+        <Text p gray>Start a chat with someone new</Text>
+      </Block>
+    );
+  }
+
   return (
     <Block safe flex={1} color={colors.background}>
       <FlatList
-        data={mockChats}
+        data={chats}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={{

@@ -4,4 +4,4 @@ export interface User {
   avatarUrl: string;
   gender: 'Male' | 'Female';
   bio: string;
-} 
+}

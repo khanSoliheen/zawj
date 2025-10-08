@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import { Block, Image, Text } from '@/components';
-import { useAuth, useData } from '@/hooks';
+import { useAuth, useData, useToast } from '@/hooks';
 import { supabase } from '@/utils/supabase';
 
 type ChatItem = {
@@ -17,6 +17,7 @@ type ChatItem = {
 const ChatList = () => {
   const { theme } = useData();
   const { currentUser } = useAuth();
+  const { show } = useToast();
   const { colors, sizes } = theme;
 
   const [chats, setChats] = useState<ChatItem[]>([]);
@@ -47,9 +48,8 @@ const ChatList = () => {
         `)
         .or(`user1.eq.${userId},user2.eq.${userId}`)
         .order('created_at', { ascending: false });
-
       if (error) {
-        console.log('fetchChats error:', error.message);
+        show("error", error.message)
         setChats([]);
       } else if (data) {
         const formatted = data.map((c: any) => {
@@ -63,7 +63,7 @@ const ChatList = () => {
           const lastMessage = sortedMessages[sortedMessages.length - 1];
           return {
             id: c.id,
-            name: other?.full_name || 'User',
+            name: `${other?.firstName || 'User'} ${other?.lastName || ''}`,
             lastMessage: lastMessage?.content || 'No messages yet',
             time: lastMessage
               ? new Date(lastMessage.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -78,10 +78,14 @@ const ChatList = () => {
     };
 
     fetchChats();
-  }, [staticAvatar, userId]);
+  }, [staticAvatar, userId, show]);
 
   const renderItem = ({ item }: { item: ChatItem }) => (
-    <TouchableOpacity onPress={() => router.push(`/chat/${item.id}`)} activeOpacity={0.8}>
+    <TouchableOpacity onPress={() => router.push({
+      pathname: `/chat/${item.id}`, params: {
+        name: item.name,
+      }
+    })} activeOpacity={0.8}>
       <Block
         row
         align="center"

@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
-import { useSearchParams } from 'expo-router/build/hooks';
+import { useLocalSearchParams } from 'expo-router/build/hooks';
 import React, { useEffect, useState } from 'react';
 
-import { Block, Button, Image, Text } from '@/components';
+import { Block, Button, Image, MoreMenu, Text } from '@/components';
 import { useAuth, useData, useToast } from '@/hooks';
 import { RegistrationData } from '@/store/registration';
 import { supabase } from '@/utils/supabase';
@@ -11,13 +11,13 @@ import { Utils } from '@/utils/utils';
 
 const Profile = () => {
   const { theme } = useData();
-  const params = useSearchParams();
-  const id = params.get('id');
+  const { id } = useLocalSearchParams();
   const { currentUser } = useAuth();
   const { show } = useToast();
   const { assets, colors, sizes, gradients } = theme;
 
   const [userDetails, setUserDetails] = useState<RegistrationData | null>(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   useEffect(() => {
     async function getUserDetails() {
@@ -68,7 +68,7 @@ const Profile = () => {
       conversationId = newConv.id;
     }
     // 3. Navigate to chat screen
-    router.push(`/chat/${conversationId}`);
+    router.push({ pathname: `/chat/${conversationId}`, params: { name: fullName } });
   };
 
   const fullName = `${userDetails?.firstName || ''} ${userDetails?.lastName || ''}`.trim();
@@ -99,6 +99,9 @@ const Profile = () => {
               <Text p white marginLeft={sizes.s}>
                 Back
               </Text>
+            </Button>
+            <Button onPress={() => setMenuOpen(true)}>
+              <Image radius={0} width={20} height={20} source={assets.more} color={colors.text} />
             </Button>
           </Block>
 
@@ -168,6 +171,9 @@ const Profile = () => {
           </Text>
         </Button>
       </Block>
+      {/* ... profile content ... */}
+
+      <MoreMenu targetUserId={String(id)} visible={menuOpen} onClose={() => setMenuOpen(false)} />
     </Block>
   );
 };

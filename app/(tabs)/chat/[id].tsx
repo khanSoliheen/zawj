@@ -2,8 +2,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 
-import { Block, Bubble, Button, DateDivider, Image, Input, Text, TimeStamp } from '@/components';
-import { useAuth, useData } from '@/hooks';
+import { Block, Bubble, Button, DateDivider, Image, Input, MoreMenu, Text, TimeStamp } from '@/components';
+import { useAuth, useData, useToast } from '@/hooks';
 import { supabase } from '@/utils/supabase';
 
 export type Message = {
@@ -24,16 +24,17 @@ const fmtDate = (iso: string) =>
 export default function Chat() {
   const { theme } = useData();
   const { currentUser } = useAuth();
+  const { show } = useToast();
   const { colors, sizes, assets, gradients } = theme;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
   const listRef = useRef<FlatList<any>>(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   // ✅ safer param hook
-  const { id: conversationId } = useLocalSearchParams<{ id: string }>();
+  const { id: conversationId, name } = useLocalSearchParams();
   const userId = currentUser?.id;
-
   // ✅ dummy avatars
   const meAvatar = assets.avatar2 ?? assets.avatar1;
   const themAvatar = assets.avatar1 ?? assets.avatar2;
@@ -49,7 +50,7 @@ export default function Chat() {
         .order('created_at', { ascending: true });
 
       if (error) {
-        console.log('fetch error', error);
+        show('error', error.message);
         return;
       }
 
@@ -63,7 +64,7 @@ export default function Chat() {
         }))
       );
     })();
-  }, [conversationId, userId, meAvatar, themAvatar]);
+  }, [conversationId, userId, meAvatar, themAvatar, show]);
 
   // ✅ realtime subscription
   useEffect(() => {
@@ -112,10 +113,9 @@ export default function Chat() {
     });
 
     if (error) {
-      console.log('sendMessage error:', error);
+      show("error", error.message);
       setText(content); // restore on failure
     }
-    console.log('sendMessage success');
     requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
   };
 
@@ -143,16 +143,16 @@ export default function Chat() {
       <Block
         flex={0}
         row
-        align="center"
+        align="flex-start"
         color={colors.white}
-        paddingHorizontal={sizes.m}
+        paddingHorizontal={sizes.s}
       >
         {/* Left side */}
         <Block row align="center">
           <Button
             row
             flex={0}
-            justify="flex-start"
+            justify="center"
             width={0}
             onPress={() => router.back()}>
             <Image
@@ -164,25 +164,22 @@ export default function Chat() {
               transform={[{ rotate: '180deg' }]}
             />
           </Button>
-          <Text h6>Chat</Text>
-        </Block>
-
-        {/* Right side */}
-        <Block row align="center" position='absolute' right={10}>
-          <Image
-            source={assets.bell}
-            width={20}
-            height={20}
-            style={{ marginLeft: sizes.s }}
-          />
           <Image
             source={meAvatar}
             width={28}
             height={28}
             radius={14}
-            style={{ marginLeft: sizes.s }}
+            marginRight={sizes.s}
           />
+          <Text h5>{name}</Text>
         </Block>
+
+        {/* Right side */}
+        <Block row align="center">
+        </Block>
+        <Button onPress={() => setMenuOpen(prev => !prev)}>
+          <Image radius={0} width={20} height={20} source={assets.more} color={colors.text} />
+        </Button>
       </Block>
       {/* messages */}
       <Block flex={1} marginBottom={10}>
@@ -226,6 +223,7 @@ export default function Chat() {
           <Image source={assets.arrow} width={16} height={16} color={colors.white} transform={[{ rotate: '315deg' }]} />
         </Button>
       </Block>
+      <MoreMenu targetUserId={String(userId)} visible={menuOpen} chatId={String(conversationId)} />
     </Block>
   );
 }

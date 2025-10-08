@@ -86,7 +86,7 @@ const Profile = () => {
               </Button>
 
               {/* Settings */}
-              <Button onPress={() => router.push('/profile/settings')}>
+              <Button onPress={() => router.push("/screens/settings")}>
                 <Image
                   source={assets.settings}
                   width={20}

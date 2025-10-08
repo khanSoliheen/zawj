@@ -93,10 +93,10 @@ export default function TabsLayout() {
         name="chat/[id]"
         options={{ href: null }}   // ❌ removes from tab bar
       />
-      <Tabs.Screen
-        name="profile/settings"
+      {/*<Tabs.Screen
+        name="profile/['*']"
         options={{ href: null }}   // ❌ removes from tab bar
-      />
+      />*/}
     </Tabs>
   );
 }

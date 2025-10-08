@@ -12,6 +12,7 @@ import { useRegistrationStore } from '@/store/registration';
 
 const schema = z.object({
   gender: z.enum(['Male', 'Female'], { error: 'Please select your gender' }),
+  religion: z.enum(['Islam', 'Other'], { error: 'Please select your religion' }),
   dob: z.string().min(4, 'Enter DOB (YYYY-MM-DD)'),
   country: z.string().min(4, 'Enter a valid country'),
   state: z.string().min(4, 'Enter a valid state'),
@@ -77,6 +78,23 @@ export default function Step2() {
               <SelectInput
                 label="Gender"
                 options={['Male', 'Female']}
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+        </Block>
+
+        {/* Religion */}
+        <Block flex={0} style={{ zIndex: 0 }}>
+          <Controller
+            control={control}
+            name="religion"
+            render={({ field, fieldState }) => (
+              <SelectInput
+                label="Religion"
+                options={['Islam', 'Other']}
                 value={field.value}
                 onChange={field.onChange}
                 error={fieldState.error?.message}

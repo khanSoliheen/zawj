@@ -282,7 +282,6 @@ export default function Chat() {
     return rows;
   }, [messages]);
 
-  console.log(connection);
   const canType = connection?.status === 'accepted' || !connection; // allow typing to create request
   const isPendingAddressee = connection?.status === 'pending' && connection.addressee_id === userId;
 

@@ -1,4 +1,7 @@
+import { Buffer } from "buffer";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -9,6 +12,10 @@ import { Block, Button, Text, Image, Input } from "@/components";
 import { useData, useToast } from "@/hooks";
 import { supabase } from "@/utils/supabase";
 
+if (!(globalThis as any).Buffer) {
+  (globalThis as any).Buffer = Buffer;
+}
+
 const schema = z.object({
   full_name: z.string().trim().min(2, "Enter your name"),
   bio: z.string().trim().max(300, "Max 300 characters").optional().or(z.literal("")),
@@ -16,6 +23,7 @@ const schema = z.object({
   profession: z.string().trim().max(120).optional().or(z.literal("")),
 });
 type FormValues = z.infer<typeof schema>;
+const AVATAR_BUCKET = "zawj";
 
 export default function EditProfile() {
   const { theme } = useData();
@@ -74,29 +82,32 @@ export default function EditProfile() {
     });
     if (res.canceled) return;
     const file = res.assets[0];
-    await uploadAvatar(file.uri);
+    await uploadAvatar(file);
   };
 
-  const uploadAvatar = async (uri: string) => {
+  const uploadAvatar = async (asset: ImagePicker.ImagePickerAsset) => {
     try {
       setUploading(true);
       const { data: auth } = await supabase.auth.getUser();
       const userId = auth?.user?.id!;
-      const ext = uri.split(".").pop() || "jpg";
+      const ext = asset.fileName?.split(".").pop() || asset.mimeType?.split("/").pop() || "jpg";
       const path = `avatars/${userId}_${Date.now()}.${ext}`;
 
-      const resp = await fetch(uri);
-      const blob = await resp.blob();
+      const base64 = await FileSystem.readAsStringAsync(asset.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const buffer = Buffer.from(base64, "base64");
+      const contentType = asset.mimeType || "image/jpeg";
 
       // Upload to storage bucket "avatars"
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, {
-        contentType: blob.type || "image/jpeg",
+      const { error: upErr } = await supabase.storage.from(AVATAR_BUCKET).upload(path, buffer, {
+        contentType,
         upsert: true,
       });
       if (upErr) throw upErr;
 
       // Get a public URL (or use RLS-signed URLs if you prefer)
-      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const { data: pub } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(path);
       const publicUrl = pub.publicUrl;
 
       // Save to profile row

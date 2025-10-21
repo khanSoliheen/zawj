@@ -116,12 +116,6 @@ export default function Home() {
     setRefreshing(false);
   };
 
-  const startOrOpenThread = async (targetUserId: string) => {
-    const { data, error } = await supabase.rpc('start_or_get_thread', { invitee: targetUserId });
-    if (error) return show('error', error.message);
-    router.push({ pathname: '/chat/[id]', params: { id: data as string } });
-  };
-
   const toggleExpand = (id: string) =>
     setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 

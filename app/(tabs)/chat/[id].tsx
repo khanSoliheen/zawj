@@ -113,7 +113,6 @@ export default function Chat() {
     })();
   }, [conversationId, show]);
 
-
   // ✅ realtime: messages
   useEffect(() => {
     if (!conversationId) return;

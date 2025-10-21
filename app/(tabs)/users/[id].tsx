@@ -8,7 +8,6 @@ import { RegistrationData } from '@/store/registration';
 import { supabase } from '@/utils/supabase';
 import { Utils } from '@/utils/utils';
 
-
 const Profile = () => {
   const { theme } = useData();
   const { id } = useLocalSearchParams();

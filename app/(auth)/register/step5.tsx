@@ -71,7 +71,6 @@ export default function Step5() {
     router.replace("/login");
   };
 
-
   return (
     <Block safe color={colors.background} >
       <Block paddingHorizontal={sizes.s}>

@@ -23,7 +23,6 @@ export interface RegistrationData {
   designation: string;
   department: string;
 
-
   // Step 3
   marital_status: 'Single' | 'Married' | 'Divorced' | 'Widowed';
   wali_name?: string;
@@ -31,7 +30,6 @@ export interface RegistrationData {
   wali_contact?: string;
   children_count?: string;
   children_details?: string;
-
 
   // Step 4
   prayer_regularity: '5x daily' | 'Regularly' | 'Sometimes' | 'Rarely' | 'Never';

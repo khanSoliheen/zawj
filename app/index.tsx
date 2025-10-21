@@ -32,7 +32,6 @@ export default function Welcome() {
         </TouchableOpacity>
       </Link>
 
-
       {/* How It Works */}
       <Text style={styles.sectionTitle}>{t('how_it_works')}</Text>
       <View style={styles.stepList}>

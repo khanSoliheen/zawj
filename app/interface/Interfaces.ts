@@ -6,7 +6,6 @@ export interface ILanguageDetectorPlugin {
   cacheUserLanguage: (_: string) => void;
 }
 
-
 export interface IRegisterFormData {
   firstName: string;
   lastName: string;

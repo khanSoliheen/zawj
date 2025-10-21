@@ -37,4 +37,5 @@ yarn-error.*
 
 app-example
 
+# package manager locks
 pnpm-lock.yaml

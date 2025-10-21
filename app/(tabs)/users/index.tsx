@@ -108,7 +108,6 @@ export default function Home() {
     setLoading(false);
   }, [from, done, show]);
 
-
   useEffect(() => { void fetchPage(true); }, [fetchPage]);
 
   const onRefresh = async () => {

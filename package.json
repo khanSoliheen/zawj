@@ -11,7 +11,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "eslint . --ext .ts,.tsx --fix --max-warnings=0",
+    "lint": "eslint . --ext .js,.ts,.tsx --fix --max-warnings=0",
     "typecheck": "tsc --noEmit"
   },
   "jest": {
@@ -85,7 +85,7 @@
     "typescript": "^5.9.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --fix"
+    "*.{js,ts,tsx}": "eslint --fix"
   },
   "*": "tsc --noEmit",
   "private": true

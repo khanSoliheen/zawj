@@ -33,16 +33,6 @@ const Preferences = () => {
       );
       return;
     }
-
-    console.log({
-      minAge,
-      maxAge,
-      location,
-      education,
-      deen,
-      waliVerified,
-    });
-    // Later: send these filters to your backend or context
   };
 
   return (

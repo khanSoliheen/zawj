@@ -27,7 +27,6 @@ const Profile = () => {
         .select('*')
         .eq('id', id)
         .single();
-      console.log(data)
       if (error) {
         show("error", error.message)
       } else {

@@ -81,7 +81,6 @@ export default function Chat() {
       return;
     }
     const iAmAddressee = connection.addressee_id === userId;
-    console.log(iAmAddressee, connection.addressee_id, userId);
     setShowAccept(iAmAddressee);
   }, [connection, userId]);
 

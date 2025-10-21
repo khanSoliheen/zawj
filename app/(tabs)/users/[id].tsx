@@ -53,7 +53,7 @@ const Profile = () => {
         .from("conversations")
         .insert({
           user1: currentUser.id,
-          user2: id,
+          user2: userDetails?.id,
         })
         .select("id")
         .single();

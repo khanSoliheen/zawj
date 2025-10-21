@@ -28,8 +28,8 @@ export default function AcceptMessage({
   const { colors, sizes } = theme;
 
   return (
-    <Modal transparent visible={visible} animationType="fade" onRequestClose={onClose}>
-      <Pressable style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.35)" }} onPress={onClose} />
+    <Modal transparent visible={visible} animationType="slide" onRequestClose={onClose}>
+      <Pressable style={{ flex: 1, backgroundColor: colors.background }} onPress={onClose} />
       <Block
         position="absolute"
         bottom={0}

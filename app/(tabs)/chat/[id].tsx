@@ -52,8 +52,8 @@ export default function Chat() {
   const themAvatar = assets.avatar1 ?? assets.avatar2;
 
   // ---- Fetch connection between current user and peer (in either direction)
-  const fetchConnection = async () => {
-    if (!userId || !peerId) return;
+  const fetchConnection = useCallback(async (): Promise<Connection | null> => {
+    if (!userId || !peerId) return null;
     const { data, error } = await supabase
       .from('connections')
       .select('*')
@@ -62,18 +62,19 @@ export default function Chat() {
         `and(requester_id.eq.${userId},addressee_id.eq.${peerId}),and(requester_id.eq.${peerId},addressee_id.eq.${userId})`
       )
       .single();
-
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows
-      show('error', error.message);
-      return;
+    if (error) {
+      if (error.code !== 'PGRST116') {
+        show('error', error.message);
+      }
+      return null;
     }
-    setConnection(data ?? null);
-  };
+    setConnection(data);
+    return data;
+  }, [peerId, show, userId]);
 
   useEffect(() => {
     fetchConnection();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, peerId]);
+  }, [fetchConnection]);
 
   // ---- When connection is pending and current user is the addressee, show accept sheet
   useEffect(() => {
@@ -84,6 +85,41 @@ export default function Chat() {
     const iAmAddressee = connection.addressee_id === userId;
     setShowAccept(iAmAddressee);
   }, [connection, userId]);
+
+  const ensureConnection = useCallback(async (): Promise<Connection | null> => {
+    if (connection) return connection;
+
+    const existing = await fetchConnection();
+    if (existing) return existing;
+
+    if (!userId || !peerId) return null;
+
+    const payload = {
+      requester_id: userId,
+      addressee_id: peerId,
+      status: 'pending' as Connection['status'],
+    };
+
+    const { data, error } = await supabase
+      .from('connections')
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      // Someone else might have created the connection simultaneously.
+      const details = typeof error.details === 'string' ? error.details.toLowerCase() : '';
+      const message = error.message?.toLowerCase() ?? '';
+      if (error.code === '23505' || details.includes('duplicate') || message.includes('duplicate')) {
+        return fetchConnection();
+      }
+      show('error', error.message);
+      return null;
+    }
+
+    setConnection(data);
+    return data;
+  }, [connection, fetchConnection, peerId, show, userId]);
 
   useFocusEffect(
     useCallback(() => {
@@ -162,43 +198,26 @@ export default function Chat() {
     return () => { supabase.removeChannel(channel); };
   }, [userId, peerId]);
 
-  // ✅ send message (gate by connection status)
+  // ✅ send message (ensures connection exists + writes both records)
   const sendMessage = async () => {
     const content = text.trim();
     if (!content || !userId || !conversationId) return;
 
-    // If no connection: create pending and stop
-    if (!connection) {
-      const { error } = await supabase.from('connections').insert({
-        requester_id: userId,
-        addressee_id: peerId,
-        status: 'pending',
-      });
-      if (error) return show('error', error.message);
-      show('success', 'Message request sent');
-      setText('');
-      await fetchConnection();
-      return;
-    }
+    const activeConnection = await ensureConnection();
+    if (!activeConnection) return;
 
-    // If blocked/declined: stop
-    if (connection.status === 'blocked' || connection.status === 'declined') {
+    if (activeConnection.status === 'blocked' || activeConnection.status === 'declined') {
       return show('error', 'You cannot send messages to this user.');
     }
 
-    // If pending and I'm requester: do not send until accepted
-    if (connection.status === 'pending' && connection.requester_id === userId) {
-      return show('info', 'Waiting for the user to accept your request.');
-    }
-
-    // If pending and I'm addressee: show accept UI
-    if (connection.status === 'pending' && connection.addressee_id === userId) {
+    const isPendingAddressee = activeConnection.status === 'pending' && activeConnection.addressee_id === userId;
+    if (isPendingAddressee) {
       setShowAccept(true);
+      show('info', 'Accept the request to reply.');
       return;
     }
 
     // OK to send
-    setText('');
     const { error } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       sender_id: userId,
@@ -206,10 +225,15 @@ export default function Chat() {
     });
 
     if (error) {
-      show("error", error.message);
-      setText(content);
+      show('error', error.message);
       return;
     }
+
+    if (activeConnection.status === 'pending' && activeConnection.requester_id === userId) {
+      show('success', 'Message request sent');
+    }
+
+    setText('');
     requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: true }));
   };
 
@@ -258,6 +282,7 @@ export default function Chat() {
     return rows;
   }, [messages]);
 
+  console.log(connection);
   const canType = connection?.status === 'accepted' || !connection; // allow typing to create request
   const isPendingAddressee = connection?.status === 'pending' && connection.addressee_id === userId;
 

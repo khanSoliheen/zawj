@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 
-import { Block, Text, Input, Image, Button } from '@/components';
+import { Block, Text, Input, Image } from '@/components';
 import { useData, useToast } from '@/hooks';
 import { supabase } from '@/utils/supabase';
 import { Utils } from '@/utils/utils';
@@ -157,6 +157,11 @@ export default function Home() {
       { label: FACT_LABELS.education, value: item.education || '' },
     ].filter(f => !!f.value);
 
+    const hasMoreFacts = moreFacts.length > 0;
+    const primaryFactsText = primaryFacts
+      .map(f => `${f.label}: ${f.value}`)
+      .join('  •  ');
+
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={() => router.push(`/users/${item.id}`)}>
         <Block
@@ -184,44 +189,36 @@ export default function Home() {
 
           {/* Compact fact line */}
           {!!primaryFacts.length && (
-            <Text size={12} color={colors.gray} marginTop={sizes.s}>
-              {primaryFacts.map(f => `${f.label}: ${f.value}`).join('  •  ')}
-            </Text>
-          )}
-
-          {/* More details toggle */}
-          {moreFacts.length > 0 && (
-            <Block marginTop={sizes.xs}>
-              <Button onPress={() => toggleExpand(item.id)}>
-                <Text p semibold color={colors.link}>
-                  {expanded[item.id] ? 'Less details ▴' : 'More details ▾'}
+            <Block marginTop={sizes.s}>
+              <Block row wrap="wrap" align="center">
+                <Text size={12} color={colors.gray}>
+                  {primaryFactsText}
                 </Text>
-              </Button>
-
-              {expanded[item.id] && (
-                <Block marginTop={sizes.xs}>
-                  {moreFacts.map((f) => (
-                    <Text key={`${item.id}-${f.label}`} size={12} color={colors.gray} marginTop={4}>
-                      <Text semibold size={12}>{f.label}:</Text>{` ${f.value}`}
-                    </Text>
-                  ))}
-                </Block>
-              )}
+                {hasMoreFacts && (
+                  <Text
+                    size={12}
+                    semibold
+                    color={colors.link}
+                    marginLeft={sizes.xs}
+                    onPress={() => toggleExpand(item.id)}
+                  >
+                    {expanded[item.id] ? 'less...' : 'more...'}
+                  </Text>
+                )}
+              </Block>
             </Block>
           )}
 
-          {/* Actions */}
-          <Block row marginTop={sizes.m}>
-            <Button color={colors.primary} onPress={() => startOrOpenThread(item.id)}>
-              <Block row align="center" paddingVertical={sizes.s}>
-                <Image radius={0} width={18} height={18} source={assets.chat} color={colors.white} />
-                <Text white semibold marginLeft={sizes.s}>Message</Text>
-              </Block>
-            </Button>
-            <Button onPress={() => router.push(`/users/${item.id}`)} marginLeft={sizes.s}>
-              <Text p semibold color={colors.link}>View Profile</Text>
-            </Button>
-          </Block>
+          {/* More details */}
+          {hasMoreFacts && expanded[item.id] && (
+            <Block marginTop={sizes.xs}>
+              {moreFacts.map((f) => (
+                <Text key={`${item.id}-${f.label}`} size={12} color={colors.gray} marginTop={4}>
+                  <Text semibold size={12}>{f.label}:</Text>{` ${f.value}`}
+                </Text>
+              ))}
+            </Block>
+          )}
 
           {/* Last active (optional) */}
           {lastActive ? (

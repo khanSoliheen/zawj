@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 
 import { AcceptMessage, Block, Bubble, Button, DateDivider, Image, Input, MoreMenu, Text, TimeStamp } from '@/components';
@@ -83,6 +84,15 @@ export default function Chat() {
     const iAmAddressee = connection.addressee_id === userId;
     setShowAccept(iAmAddressee);
   }, [connection, userId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const pendingForMe = connection?.status === 'pending' && connection.addressee_id === userId;
+      if (pendingForMe) {
+        setShowAccept(true);
+      }
+    }, [connection?.status, connection?.addressee_id, userId])
+  );
 
   // ✅ fetch old messages
   useEffect(() => {

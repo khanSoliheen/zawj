@@ -6,25 +6,53 @@ import { Controller, useForm } from 'react-hook-form';
 import { Platform } from 'react-native';
 import { z } from 'zod';
 
-import { Block, Button, Image, Input, Text } from '@/components';
+import { Block, Button, Image, Input, SelectInput, Text, DatePicker } from '@/components';
 import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
-
 const isAndroid = Platform.OS === 'android';
 
 const schema = z.object({
-  firstName: z.string().min(4, 'Enter your first name'),
-  lastName: z.string().min(4, 'Enter your last name'),
+  first_name: z.string().min(4, 'Enter your first name'),
+  last_name: z.string().min(1, 'Enter your last name'),
+  gender: z.enum(['Male', 'Female'], { error: 'Please select your gender' }),
+  dob: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use format YYYY-MM-DD')
+    .refine((s) => {
+      // Parse safely
+      const [y, m, d] = s.split('-').map(Number);
+      const dob = new Date(y, m - 1, d);
+      if (Number.isNaN(dob.getTime())) return false;
+
+      const today = new Date();
+
+      // Cutoffs
+      const eighteenYearsAgo = new Date(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDate()
+      );
+      const hundredYearsAgo = new Date(
+        today.getFullYear() - 100,
+        today.getMonth(),
+        today.getDate()
+      );
+
+      // Must be between 100 years ago and 18 years ago (inclusive on 18)
+      return dob <= eighteenYearsAgo && dob >= hundredYearsAgo;
+    }, { message: 'You must be at least 18 years old (and not older than 100).' }),
+  country: z.string().min(4, 'Enter a valid country'),
+  state: z.string().min(4, 'Enter a valid state'),
+  city: z.string().min(4, 'Enter a valid city'),
+  visibility: z.enum(['Public', 'Private', 'Matched Only'], { error: 'Please select visibility' }),
   email: z.email('Enter valid email'),
-  phone: z.string().min(10, 'Enter valid phone'),
   password: z.string().min(6, 'Min 6 characters'),
-  confirmPassword: z.string().min(6, 'Min 6 characters'),
-}).superRefine(({ password, confirmPassword }, ctx) => {
-  if (password !== confirmPassword) {
+  confirm_password: z.string().min(6, 'Min 6 characters'),
+}).superRefine(({ password, confirm_password }, ctx) => {
+  if (password !== confirm_password) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: 'Passwords do not match',
-      path: ['confirmPassword'],
+      path: ['confirm_password'],
     });
   }
 });
@@ -81,54 +109,6 @@ export default function Step1() {
           </Text>
         </Block>
 
-        {/* First Name */}
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Controller
-            control={control}
-            name="firstName"
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Input
-                id="firstName"
-                label="First Name"
-                autoCapitalize="words"
-                autoCorrect={false}
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                ref={ref}
-                error={errors.firstName?.message}
-                success={dirtyFields.firstName && !errors.firstName}
-                placeholder="your first name"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
-        {/* Last Name */}
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Controller
-            control={control}
-            name="lastName"
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <Input
-                id="lastName"
-                label="Last Name"
-                autoCapitalize="words"
-                autoCorrect={false}
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                ref={ref}
-                error={errors.lastName?.message}
-                success={dirtyFields.lastName && !errors.lastName}
-                placeholder="your last name"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
         {/* Email */}
         <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
@@ -148,31 +128,173 @@ export default function Step1() {
                 error={errors.email?.message}
                 success={dirtyFields.email && !errors.email}
                 placeholder="you@example.com"
-                marginBottom={12}
+
               />
             )}
           />
         </Block>
 
-        {/* Phone */}
+        {/* First Name */}
         <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
-            name="phone"
+            name="first_name"
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
-                id="phone"
-                label="Phone Number"
-                keyboardType="phone-pad"
-                autoCapitalize="none"
+                id="firstName"
+                label="First Name"
+                autoCapitalize="words"
+                autoCorrect={false}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 ref={ref}
-                error={errors.phone?.message}
-                success={dirtyFields.phone && !errors.phone}
-                placeholder="+91 9876543210"
-                marginBottom={12}
+                error={errors.first_name?.message}
+                success={dirtyFields.first_name && !errors.first_name}
+                placeholder="your first name"
+              />
+            )}
+          />
+        </Block>
+
+        {/* Last Name */}
+        <Block flex={0} style={{ zIndex: 0 }}>
+          <Controller
+            control={control}
+            name="last_name"
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <Input
+                id="last_name"
+                label="Last Name"
+                autoCapitalize="words"
+                autoCorrect={false}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                ref={ref}
+                error={errors.last_name?.message}
+                success={dirtyFields.last_name && !errors.last_name}
+                placeholder="your last name"
+
+              />
+            )}
+          />
+        </Block>
+
+        {/* Gender */}
+        <Block flex={0} style={{ zIndex: 0 }}>
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field, fieldState }) => (
+              <SelectInput
+                label="Gender"
+                options={['Male', 'Female']}
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+        </Block>
+
+        {/* DOB */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="dob"
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <DatePicker
+                label="Date of Birth"
+                placeholder="YYYY-MM-DD"
+                value={value}
+                error={error?.message}
+                onChange={onChange}
+                minimumDate={new Date(1990, 0, 1)} // optional
+                maximumDate={new Date()}            // today
+              />
+            )}
+          />
+        </Block>
+
+        {/* Country */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="country"
+            render={({ field, fieldState }) => (
+              <Input
+                id="country"
+                label="Country"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                error={fieldState.error?.message}
+                success={dirtyFields.country && !errors.country}
+                placeholder="Enter your country"
+
+              />
+            )}
+          />
+        </Block>
+
+        {/* State */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="state"
+            render={({ field, fieldState }) => (
+              <Input
+                id="state"
+                label="State"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                error={fieldState.error?.message}
+                success={dirtyFields.state && !errors.state}
+                placeholder="Enter your state"
+
+              />
+            )}
+          />
+        </Block>
+
+        {/* City */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="city"
+            render={({ field, fieldState }) => (
+              <Input
+                id="city"
+                label="City"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                error={fieldState.error?.message}
+                success={dirtyFields.city && !errors.city}
+                placeholder="Enter your city"
+
+              />
+            )}
+          />
+        </Block>
+
+        {/* Visibility */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="visibility"
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <SelectInput
+                label="Visibility"
+                options={['Public', 'Private', 'Matched Only']}
+                value={value}
+                onChange={onChange}
+                error={error?.message}
               />
             )}
           />
@@ -195,7 +317,7 @@ export default function Step1() {
                 error={errors.password?.message}
                 success={dirtyFields.password && !errors.password}
                 placeholder="********"
-                marginBottom={12}
+
               />
             )}
           />
@@ -205,20 +327,20 @@ export default function Step1() {
         <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
-            name="confirmPassword"
+            name="confirm_password"
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <Input
-                id="confirmPassword"
+                id="confirm_password"
                 label="Confirm Password"
                 secureTextEntry
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 ref={ref}
-                error={errors.confirmPassword?.message}
-                success={dirtyFields.confirmPassword && !errors.confirmPassword}
+                error={errors.confirm_password?.message}
+                success={dirtyFields.confirm_password && !errors.confirm_password}
                 placeholder="********"
-                marginBottom={12}
+
               />
             )}
           />

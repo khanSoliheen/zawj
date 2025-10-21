@@ -1,3 +1,4 @@
+import AcceptMessage from './acceptMessage';
 import Block from './block';
 import Bubble from './bubble';
 import Button from './button';
@@ -13,4 +14,4 @@ import Text from './text';
 import TimeStamp from './timestamp';
 import User from './user';
 
-export { Block, Button, Image, Text, Switch, Input, Modal, User, DatePicker, SelectInput, Bubble, DateDivider, TimeStamp, MoreMenu };
+export { Block, Button, Image, Text, Switch, Input, Modal, User, DatePicker, SelectInput, Bubble, DateDivider, TimeStamp, MoreMenu, AcceptMessage };

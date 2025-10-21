@@ -10,9 +10,13 @@ import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
 
 const schema = z.object({
-  prayerRegularity: z.enum(['5x daily', 'Regularly', 'Sometimes', 'Rarely', 'Never'], { error: 'Please select 5x daily, regularly, sometimes, rarely, never' }),
-  quranLevel: z.string().min(4, 'Please enter your Qur\'an level'),
-  hijabOrBeard: z.enum(['Yes', 'No', 'Sometimes'], { error: 'Please select Yes, No, Sometimes, Rarely, Never' }),
+  religion: z.enum(['Islam', 'Other'], { error: 'Please select your religion' }),
+  wali_name: z.string().optional(),
+  wali_relation: z.string().optional(),
+  wali_contact: z.string().optional(),
+  prayer_regularity: z.enum(['5x daily', 'Regularly', 'Sometimes', 'Rarely', 'Never'], { error: 'Please select 5x daily, regularly, sometimes, rarely, never' }),
+  quran_level: z.string().min(4, 'Please enter your Qur\'an level'),
+  hijab_or_beard: z.enum(['Yes', 'No', 'Sometimes'], { error: 'Please select Yes, No, Sometimes, Rarely, Never' }),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -63,11 +67,28 @@ export default function Step4() {
           <Text h4 marginLeft={sizes.s}>Step 4: Islamic Identity</Text>
         </Block>
 
+        {/* Religion */}
+        <Block flex={0} style={{ zIndex: 0 }}>
+          <Controller
+            control={control}
+            name="religion"
+            render={({ field, fieldState }) => (
+              <SelectInput
+                label="Religion"
+                options={['Islam', 'Other']}
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+        </Block>
+
         {/* Prayer Regularity */}
         <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
-            name="prayerRegularity"
+            name="prayer_regularity"
             render={({ field, fieldState }) => (
               <SelectInput
                 label="Prayer Regularity"
@@ -84,7 +105,7 @@ export default function Step4() {
         <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
-            name="quranLevel"
+            name="quran_level"
             render={({ field, fieldState }) => (
               <Input
                 id="quranLevel"
@@ -94,8 +115,75 @@ export default function Step4() {
                 onBlur={field.onBlur}
                 ref={field.ref}
                 error={fieldState.error?.message}
-                success={dirtyFields.quranLevel && !errors.quranLevel}
+                success={dirtyFields.quran_level && !errors.quran_level}
                 placeholder="Fluent / Learning / Basic"
+                marginBottom={12}
+              />
+            )}
+          />
+        </Block>
+
+        {/* Wali Name */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="wali_name"
+            render={({ field, fieldState }) => (
+              <Input
+                id="waliName"
+                label="Wali Name (if female)"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                error={fieldState.error?.message}
+                success={dirtyFields.wali_name && !errors.wali_name}
+                placeholder="Enter wali name"
+                marginBottom={12}
+              />
+            )}
+          />
+        </Block>
+
+        {/* Wali Relation */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="wali_relation"
+            render={({ field, fieldState }) => (
+              <Input
+                id="waliRelation"
+                label="Wali Relation"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                error={fieldState.error?.message}
+                success={dirtyFields.wali_relation && !errors.wali_relation}
+                placeholder="e.g. Father / Brother"
+                marginBottom={12}
+              />
+            )}
+          />
+        </Block>
+
+        {/* Wali Contact */}
+        <Block flex={0} style={{ zIndex: 0 }} >
+          <Controller
+            control={control}
+            name="wali_contact"
+            render={({ field, fieldState }) => (
+              <Input
+                id="waliContact"
+                label="Wali Contact"
+                keyboardType="phone-pad"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                error={fieldState.error?.message}
+                success={dirtyFields.wali_contact && !errors.wali_contact}
+                placeholder="+91 9876543210"
                 marginBottom={12}
               />
             )}
@@ -106,7 +194,7 @@ export default function Step4() {
         <Block flex={0} style={{ zIndex: 0 }} >
           <Controller
             control={control}
-            name="hijabOrBeard"
+            name="hijab_or_beard"
             render={({ field, fieldState }) => (
               <SelectInput
                 label="Hijab (for women) / Beard (for men)"

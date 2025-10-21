@@ -23,11 +23,11 @@ const Profile = () => {
     async function getUserDetails() {
       if (!id) return;
       const { data, error } = await supabase
-        .from('profiles')
+        .from('profiles_card_v')
         .select('*')
         .eq('id', id)
         .single();
-
+      console.log(data)
       if (error) {
         show("error", error.message)
       } else {
@@ -68,10 +68,10 @@ const Profile = () => {
       conversationId = newConv.id;
     }
     // 3. Navigate to chat screen
-    router.push({ pathname: `/chat/${conversationId}`, params: { name: fullName } });
+    router.push({ pathname: `/chat/${conversationId}`, params: { name: fullName, peerId: id } });
   };
 
-  const fullName = `${userDetails?.firstName || ''} ${userDetails?.lastName || ''}`.trim();
+  const fullName = `${userDetails?.first_name || ''} ${userDetails?.last_name || ''}`.trim();
 
   return (
     <Block safe flex={1} color={colors.background}>
@@ -118,7 +118,7 @@ const Profile = () => {
               {fullName}
             </Text>
             <Text p center white>
-              {userDetails?.gender}, {Utils.getAge(userDetails?.designation)} years
+              {userDetails?.gender}, {Utils.getAge(userDetails?.dob)} years
             </Text>
           </Block>
         </Image>
@@ -128,7 +128,7 @@ const Profile = () => {
           <Text h5 semibold marginBottom={sizes.s}>
             About Me
           </Text>
-          <Text p lineHeight={26}>{"Hey I am a Software Engineer"}</Text>
+          <Text p lineHeight={26}>{userDetails?.bio ?? "User's bio not available"}</Text>
         </Block>
 
         {/* Details */}
@@ -142,12 +142,9 @@ const Profile = () => {
         {/* Deen Practices */}
         <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
           <Text h5 semibold marginBottom={sizes.s}>Deen Practices</Text>
-          {/*{userDetails.deen.map((d, i) => (
-            <Text p key={i}>• {d}</Text>
-          ))}*/}
-          <Text p>Prayer: {userDetails?.prayerRegularity}</Text>
-          <Text p>Qur’an Level: {userDetails?.quranLevel}</Text>
-          <Text p>{userDetails?.gender === 'Female' ? 'Hijab' : 'Beard'}: {userDetails?.hijabOrBeard}</Text>
+          <Text p>Prayer: {userDetails?.prayer_regularity}</Text>
+          <Text p>Qur’an Level: {userDetails?.quran_level}</Text>
+          <Text p>{userDetails?.gender === 'Female' ? 'Hijab' : 'Beard'}: {userDetails?.hijab_or_beard}</Text>
         </Block>
       </Block>
 

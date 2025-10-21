@@ -1,4 +1,3 @@
-
 import * as Haptics from 'expo-haptics';
 import React, { useCallback, useState } from 'react';
 import { Platform, Pressable } from 'react-native';

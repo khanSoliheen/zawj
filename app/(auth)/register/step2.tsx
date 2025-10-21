@@ -5,18 +5,11 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Block, Button, Image, Input, SelectInput, Text } from '@/components';
-import DateInput from '@/components/date-picker';
+import { Block, Button, Image, Input, Text } from '@/components';
 import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
 
 const schema = z.object({
-  gender: z.enum(['Male', 'Female'], { error: 'Please select your gender' }),
-  religion: z.enum(['Islam', 'Other'], { error: 'Please select your religion' }),
-  dob: z.string().min(4, 'Enter DOB (YYYY-MM-DD)'),
-  country: z.string().min(4, 'Enter a valid country'),
-  state: z.string().min(4, 'Enter a valid state'),
-  city: z.string().min(4, 'Enter a valid city'),
   education: z.string().min(4, 'Enter a valid nationality'),
   employmentType: z.string().min(4, 'Enter a valid employment type'),
   designation: z.string().min(4, 'Enter a valid designation'),
@@ -67,125 +60,7 @@ export default function Step2() {
           </Button>
 
           {/* Step Title */}
-          <Text h4 marginLeft={sizes.s}> Step 2: Identity</Text>
-        </Block>
-        {/* Gender */}
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Controller
-            control={control}
-            name="gender"
-            render={({ field, fieldState }) => (
-              <SelectInput
-                label="Gender"
-                options={['Male', 'Female']}
-                value={field.value}
-                onChange={field.onChange}
-                error={fieldState.error?.message}
-              />
-            )}
-          />
-        </Block>
-
-        {/* Religion */}
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Controller
-            control={control}
-            name="religion"
-            render={({ field, fieldState }) => (
-              <SelectInput
-                label="Religion"
-                options={['Islam', 'Other']}
-                value={field.value}
-                onChange={field.onChange}
-                error={fieldState.error?.message}
-              />
-            )}
-          />
-        </Block>
-
-        {/* DOB */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="dob"
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <DateInput
-                label="Date of Birth"
-                placeholder="YYYY-MM-DD"
-                value={value}
-                error={error?.message}
-                onChange={onChange}
-                minimumDate={new Date(1950, 0, 1)} // optional
-                maximumDate={new Date()}            // today
-              />
-            )}
-          />
-        </Block>
-
-        {/* Country */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="country"
-            render={({ field, fieldState }) => (
-              <Input
-                id="country"
-                label="Country"
-                value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
-                error={fieldState.error?.message}
-                success={dirtyFields.country && !errors.country}
-                placeholder="Enter your country"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
-        {/* State */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="state"
-            render={({ field, fieldState }) => (
-              <Input
-                id="state"
-                label="State"
-                value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
-                error={fieldState.error?.message}
-                success={dirtyFields.state && !errors.state}
-                placeholder="Enter your state"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
-        {/* City */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="city"
-            render={({ field, fieldState }) => (
-              <Input
-                id="city"
-                label="City"
-                value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
-                error={fieldState.error?.message}
-                success={dirtyFields.city && !errors.city}
-                placeholder="Enter your city"
-                marginBottom={12}
-              />
-            )}
-          />
+          <Text h4 marginLeft={sizes.s}> Step 2: Career</Text>
         </Block>
 
         {/* Education */}
@@ -208,6 +83,7 @@ export default function Step2() {
               />
             )}
           />
+
           <Controller
             control={control}
             name="employmentType"
@@ -226,6 +102,7 @@ export default function Step2() {
               />
             )}
           />
+
           <Controller
             control={control}
             name="department"

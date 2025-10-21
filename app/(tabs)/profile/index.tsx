@@ -49,7 +49,7 @@ const Profile = () => {
     getUserDetails();
   }, [show, currentUser]);
 
-  const fullName = `${profile?.firstName || ''} ${profile?.lastName || ''}`.trim();
+  const fullName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
 
   return (
     <Block color={colors.background} safe marginTop={sizes.md}>
@@ -154,7 +154,7 @@ const Profile = () => {
             <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
               About me
             </Text>
-            <Text p lineHeight={26}>{profile?.waliName}</Text>
+            <Text p lineHeight={26}>{profile?.wali_name}</Text>
           </Block>
 
           {/* Profile Details */}
@@ -165,7 +165,7 @@ const Profile = () => {
 
             <Text p><Text semibold>Age:</Text> {getAge(profile?.dob)}</Text>
             <Text p><Text semibold>Location:</Text> {profile?.city}, {profile?.country}</Text>
-            <Text p><Text semibold>Status:</Text> {profile?.maritalStatus}</Text>
+            <Text p><Text semibold>Status:</Text> {profile?.marital_status}</Text>
             <Text p><Text semibold>Education:</Text> {"B.tech"}</Text>
             <Text p><Text semibold>Profession:</Text> {"software"}</Text>
 
@@ -187,7 +187,7 @@ const Profile = () => {
             </Block>*/}
 
             <Text p marginTop={sizes.s}>
-              <Text semibold>Wali:</Text> {profile?.waliName} ({profile?.waliRelation})
+              <Text semibold>Wali:</Text> {profile?.wali_name || ''} ({profile?.wali_relation || ''})
             </Text>
 
             {/*{profile. === 'verified' && (*/}

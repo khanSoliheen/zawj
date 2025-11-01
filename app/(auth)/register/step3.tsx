@@ -10,12 +10,9 @@ import { useData } from '@/hooks';
 import { useRegistrationStore } from '@/store/registration';
 
 const schema = z.object({
-  maritalStatus: z.enum(['Single', 'Married', 'Divorced', 'Widowed'], { error: 'Please select a marital status' }),
-  waliName: z.string().optional(),
-  waliRelation: z.string().optional(),
-  waliContact: z.string().optional(),
-  childrenCount: z.string().regex(/^\d+$/, 'Enter a valid number').optional(),
-  childrenDetails: z.string().optional(),
+  marital_status: z.enum(['Single', 'Married', 'Divorced', 'Widowed'], { error: 'Please select a marital status' }),
+  children_count: z.string().regex(/^\d+$/, 'Enter a valid number').optional(),
+  children_details: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -35,7 +32,7 @@ export default function Step3() {
     defaultValues: data,
   });
 
-  const maritalStatus = useWatch({ control, name: 'maritalStatus' });
+  const maritalStatus = useWatch({ control, name: 'marital_status' });
 
   const onSubmit = (values: FormValues) => {
     setData(values);
@@ -64,7 +61,7 @@ export default function Step3() {
         <Block flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
-            name="maritalStatus"
+            name="marital_status"
             render={({ field, fieldState }) => (
               <SelectInput
                 label="Marital Status"
@@ -77,80 +74,13 @@ export default function Step3() {
           />
         </Block>
 
-        {/* Wali Name */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="waliName"
-            render={({ field, fieldState }) => (
-              <Input
-                id="waliName"
-                label="Wali Name (if female)"
-                value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
-                error={fieldState.error?.message}
-                success={dirtyFields.waliName && !errors.waliName}
-                placeholder="Enter wali name"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
-        {/* Wali Relation */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="waliRelation"
-            render={({ field, fieldState }) => (
-              <Input
-                id="waliRelation"
-                label="Wali Relation"
-                value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
-                error={fieldState.error?.message}
-                success={dirtyFields.waliRelation && !errors.waliRelation}
-                placeholder="e.g. Father / Brother"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
-        {/* Wali Contact */}
-        <Block flex={0} style={{ zIndex: 0 }} >
-          <Controller
-            control={control}
-            name="waliContact"
-            render={({ field, fieldState }) => (
-              <Input
-                id="waliContact"
-                label="Wali Contact"
-                keyboardType="phone-pad"
-                value={field.value}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                ref={field.ref}
-                error={fieldState.error?.message}
-                success={dirtyFields.waliContact && !errors.waliContact}
-                placeholder="+91 9876543210"
-                marginBottom={12}
-              />
-            )}
-          />
-        </Block>
-
         {/* Conditional Children Info */}
-        {(maritalStatus === 'Divorced' || maritalStatus === 'Widowed') && (
+        {(maritalStatus === 'Divorced' || maritalStatus === 'Widowed' || maritalStatus === 'Married') && (
           <>
             <Block flex={0} style={{ zIndex: 0 }} >
               <Controller
                 control={control}
-                name="childrenCount"
+                name="children_count"
                 render={({ field, fieldState }) => (
                   <Input
                     id="childrenCount"
@@ -161,7 +91,7 @@ export default function Step3() {
                     onBlur={field.onBlur}
                     ref={field.ref}
                     error={fieldState.error?.message}
-                    success={dirtyFields.childrenCount && !errors.childrenCount}
+                    success={dirtyFields.children_count && !errors.children_count}
                     placeholder="e.g. 2"
                     marginBottom={12}
                   />
@@ -172,7 +102,7 @@ export default function Step3() {
             <Block flex={0} style={{ zIndex: 0 }} >
               <Controller
                 control={control}
-                name="childrenDetails"
+                name="children_details"
                 render={({ field, fieldState }) => (
                   <Input
                     id="childrenDetails"
@@ -182,7 +112,7 @@ export default function Step3() {
                     onBlur={field.onBlur}
                     ref={field.ref}
                     error={fieldState.error?.message}
-                    success={dirtyFields.childrenDetails && !errors.childrenDetails}
+                    success={dirtyFields.children_details && !errors.children_details}
                     placeholder="e.g. 1 son (5), 1 daughter (3)"
                     marginBottom={12}
                   />

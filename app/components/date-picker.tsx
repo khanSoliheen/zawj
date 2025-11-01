@@ -41,7 +41,7 @@ export default function DateInput({
           editable={false}
           pointerEvents="none"
           error={error}
-          marginBottom={sizes.m}
+          marginBottom={sizes.s}
         />
       </TouchableOpacity>
 

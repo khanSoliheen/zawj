@@ -11,7 +11,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "eslint . --ext .ts,.tsx --fix --max-warnings=0",
+    "lint": "eslint . --ext .js,.ts,.tsx --fix --max-warnings=0",
     "typecheck": "tsc --noEmit"
   },
   "jest": {
@@ -27,10 +27,12 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/native": "^7.1.8",
     "@supabase/supabase-js": "^2.58.0",
+    "buffer": "^6.0.3",
     "dayjs": "^1.11.18",
     "expo": "~54.0.8",
     "expo-blur": "~15.0.7",
     "expo-constants": "~ 18.0.9",
+    "expo-file-system": "~19.0.17",
     "expo-font": "~14.0.8",
     "expo-haptics": "~15.0.7",
     "expo-image-picker": "~17.0.8",
@@ -85,7 +87,7 @@
     "typescript": "^5.9.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --fix"
+    "*.{js,ts,tsx}": "eslint --fix"
   },
   "*": "tsc --noEmit",
   "private": true

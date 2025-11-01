@@ -7,7 +7,6 @@ import {
   ThemeSpacing,
 } from './types';
 
-
 export const COLORS: ThemeColors = {
   // default text color
   text: '#252F40',

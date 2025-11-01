@@ -8,7 +8,6 @@ import { RegistrationData } from '@/store/registration';
 import { supabase } from '@/utils/supabase';
 import { Utils } from '@/utils/utils';
 
-
 const Profile = () => {
   const { theme } = useData();
   const { id } = useLocalSearchParams();
@@ -20,21 +19,19 @@ const Profile = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   useEffect(() => {
-    async function getUserDetails() {
+    (async () => {
       if (!id) return;
       const { data, error } = await supabase
-        .from('profiles')
+        .from('v_profile_detail')
         .select('*')
-        .eq('id', id)
+        .eq('user_id', id)
         .single();
-
       if (error) {
         show("error", error.message)
       } else {
         setUserDetails(data);
       }
-    }
-    getUserDetails();
+    })();
   }, [show, id]);
 
   const nikahRequestHandler = async () => {
@@ -55,7 +52,7 @@ const Profile = () => {
         .from("conversations")
         .insert({
           user1: currentUser.id,
-          user2: id,
+          user2: userDetails?.id,
         })
         .select("id")
         .single();
@@ -68,10 +65,10 @@ const Profile = () => {
       conversationId = newConv.id;
     }
     // 3. Navigate to chat screen
-    router.push({ pathname: `/chat/${conversationId}`, params: { name: fullName } });
+    router.push({ pathname: `/chat/${conversationId}`, params: { name: fullName, peerId: id } });
   };
 
-  const fullName = `${userDetails?.firstName || ''} ${userDetails?.lastName || ''}`.trim();
+  const fullName = `${userDetails?.first_name || ''} ${userDetails?.last_name || ''}`.trim();
 
   return (
     <Block safe flex={1} color={colors.background}>
@@ -112,13 +109,13 @@ const Profile = () => {
               height={100}
               radius={50}
               marginBottom={sizes.sm}
-              source={assets.avatar1}
+              source={userDetails?.avatar_url ? { uri: userDetails.avatar_url } : assets.avatar1}
             />
             <Text h5 center white>
               {fullName}
             </Text>
             <Text p center white>
-              {userDetails?.gender}, {Utils.getAge(userDetails?.designation)} years
+              {userDetails?.gender}, {Utils.getAge(userDetails?.dob)} years
             </Text>
           </Block>
         </Image>
@@ -128,7 +125,7 @@ const Profile = () => {
           <Text h5 semibold marginBottom={sizes.s}>
             About Me
           </Text>
-          <Text p lineHeight={26}>{"Hey I am a Software Engineer"}</Text>
+          <Text p lineHeight={26}>{userDetails?.bio ?? "User's bio not available"}</Text>
         </Block>
 
         {/* Details */}
@@ -142,12 +139,9 @@ const Profile = () => {
         {/* Deen Practices */}
         <Block paddingHorizontal={sizes.sm} marginTop={sizes.l}>
           <Text h5 semibold marginBottom={sizes.s}>Deen Practices</Text>
-          {/*{userDetails.deen.map((d, i) => (
-            <Text p key={i}>• {d}</Text>
-          ))}*/}
-          <Text p>Prayer: {userDetails?.prayerRegularity}</Text>
-          <Text p>Qur’an Level: {userDetails?.quranLevel}</Text>
-          <Text p>{userDetails?.gender === 'Female' ? 'Hijab' : 'Beard'}: {userDetails?.hijabOrBeard}</Text>
+          <Text p>Prayer: {userDetails?.prayer_regularity}</Text>
+          <Text p>Qur’an Level: {userDetails?.quran_level}</Text>
+          <Text p>{userDetails?.gender === 'Female' ? 'Hijab' : 'Beard'}: {userDetails?.hijab_or_beard}</Text>
         </Block>
       </Block>
 

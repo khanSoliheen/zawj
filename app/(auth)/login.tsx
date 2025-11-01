@@ -5,11 +5,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { Platform, TouchableOpacity } from 'react-native';
 import { z } from 'zod';
 
-
 import { Block, Button, Image, Input, Text } from '@/components';
 import { useAuth, useData, useToast } from '@/hooks';
 import { supabase } from '@/utils/supabase';
-
 
 const isAndroid = Platform.OS === 'android';
 const schema = z.object({
@@ -26,7 +24,6 @@ export default function Login() {
   const router = useRouter();
   const { show } = useToast();
   const { colors, gradients, sizes, assets } = theme;
-
 
   const {
     control,

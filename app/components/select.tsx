@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import { Block, Text, Input, Modal, Button } from '@/components';
-import { useData } from '@/hooks';
 
 type Props = {
   label: string;
@@ -21,9 +20,6 @@ export default function SelectInput({
   error,
   onChange,
 }: Props) {
-  const { theme } = useData();
-  const { sizes } = theme;
-
   const [show, setShow] = useState(false);
 
   return (
@@ -36,7 +32,6 @@ export default function SelectInput({
           editable={false}
           pointerEvents="none"
           error={error}
-          marginBottom={sizes.m}
         />
       </TouchableOpacity>
 

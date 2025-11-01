@@ -1,3 +1,7 @@
+import { Buffer } from 'buffer';
+
+import * as FileSystem from 'expo-file-system/legacy';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
@@ -7,7 +11,12 @@ import { useAuth, useData, useToast } from '@/hooks';
 import { RegistrationData } from '@/store/registration';
 import { supabase } from '@/utils/supabase';
 
+if (!(globalThis as any).Buffer) {
+  (globalThis as any).Buffer = Buffer;
+}
+
 const isAndroid = Platform.OS === 'android';
+const AVATAR_BUCKET = 'zawj';
 
 function getAge(dob?: string) {
   if (!dob) return '—';
@@ -30,26 +39,83 @@ const Profile = () => {
   const { assets, colors, sizes } = theme;
 
   const [profile, setProfile] = useState<RegistrationData | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    async function getUserDetails() {
+    (async () => {
       if (!currentUser?.id) return;
       const { data, error } = await supabase
-        .from('profiles')
+        .from('profiles_card_v')
         .select('*')
-        .eq('id', currentUser.id)
-        .single();
-
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
       if (error) {
         show("error", error.message);
-      } else {
+      } else if (data) {
         setProfile(data);
+        setAvatarUrl(data?.avatar_url ?? null);
       }
-    }
-    getUserDetails();
+    })();
   }, [show, currentUser]);
 
-  const fullName = `${profile?.firstName || ''} ${profile?.lastName || ''}`.trim();
+  const pickAvatar = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      show('error', 'Permission to access photos is required.');
+      return;
+    }
+
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (res.canceled) return;
+    const file = res.assets[0];
+    await uploadAvatar(file);
+  };
+
+  const uploadAvatar = async (asset: ImagePicker.ImagePickerAsset) => {
+    try {
+      if (!currentUser?.id) return;
+      setUploading(true);
+      const ext = asset.fileName?.split('.').pop() || asset.mimeType?.split('/').pop() || 'jpg';
+      const path = `avatars/${currentUser.id}_${Date.now()}.${ext}`;
+
+      const base64 = await FileSystem.readAsStringAsync(asset.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const buffer = Buffer.from(base64, 'base64');
+      const contentType = asset.mimeType || 'image/jpeg';
+      const { error: upErr } = await supabase.storage.from(AVATAR_BUCKET).upload(path, buffer, {
+        contentType,
+        upsert: true,
+      });
+      if (upErr) throw upErr;
+
+      const { data: pub } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(path);
+      const publicUrl = pub.publicUrl;
+      const { error: profErr } = await supabase
+        .from('profiles_core')
+        .update({ avatar_url: publicUrl })
+        .eq('user_id', currentUser.id);
+
+      if (profErr) throw profErr;
+
+      setAvatarUrl(publicUrl);
+      setProfile((prev) => (prev ? { ...prev, avatar_url: publicUrl } : prev));
+      show('success', 'Photo updated');
+    } catch (err: any) {
+      show('error', err?.message || 'Failed to upload');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const fullName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
 
   return (
     <Block color={colors.background} safe marginTop={sizes.md}>
@@ -103,8 +169,13 @@ const Profile = () => {
                 height={100}
                 radius={50}
                 marginBottom={sizes.sm}
-                source={assets.avatar1}
+                source={avatarUrl ? { uri: avatarUrl } : assets.avatar1}
               />
+              <Button onPress={pickAvatar} disabled={uploading} marginBottom={sizes.sm}>
+                <Text p center color={colors.white}>
+                  {uploading ? 'Uploading…' : 'Change photo'}
+                </Text>
+              </Button>
               <Text h5 center white>
                 {fullName || 'Anonymous'}
               </Text>
@@ -154,7 +225,7 @@ const Profile = () => {
             <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
               About me
             </Text>
-            <Text p lineHeight={26}>{profile?.waliName}</Text>
+            <Text p lineHeight={26}>{profile?.wali_name}</Text>
           </Block>
 
           {/* Profile Details */}
@@ -165,7 +236,7 @@ const Profile = () => {
 
             <Text p><Text semibold>Age:</Text> {getAge(profile?.dob)}</Text>
             <Text p><Text semibold>Location:</Text> {profile?.city}, {profile?.country}</Text>
-            <Text p><Text semibold>Status:</Text> {profile?.maritalStatus}</Text>
+            <Text p><Text semibold>Status:</Text> {profile?.marital_status}</Text>
             <Text p><Text semibold>Education:</Text> {"B.tech"}</Text>
             <Text p><Text semibold>Profession:</Text> {"software"}</Text>
 
@@ -187,7 +258,7 @@ const Profile = () => {
             </Block>*/}
 
             <Text p marginTop={sizes.s}>
-              <Text semibold>Wali:</Text> {profile?.waliName} ({profile?.waliRelation})
+              <Text semibold>Wali:</Text> {profile?.wali_name || ''} ({profile?.wali_relation || ''})
             </Text>
 
             {/*{profile. === 'verified' && (*/}

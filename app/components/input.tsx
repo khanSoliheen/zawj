@@ -21,6 +21,8 @@ import { IInputProps } from '../constants/types';
 type Props = IInputProps & {
   error?: string;          // NEW: validation message (optional)
   helperText?: string;     // optional helper line
+  /** Set true to remove the default bottom margin */
+  noMarginBottom?: boolean;
 };
 
 const Input = forwardRef<TextInput, Props>(({
@@ -52,11 +54,16 @@ const Input = forwardRef<TextInput, Props>(({
   error,
   helperText,
   editable,
+  noMarginBottom,
   ...props
 }, ref) => {
   const { theme } = useData();
   const { assets, colors, sizes } = theme;
   const [isFocused, setFocused] = useState(false);
+
+  // compute marginBottom: default to sizes.s unless explicitly set or disabled
+  const computedMarginBottom =
+    noMarginBottom ? 0 : (typeof marginBottom === 'number' ? marginBottom : sizes.sm);
 
   const handleFocus = useCallback((event: NativeSyntheticEvent<TargetedEvent>, focus: boolean) => {
     setFocused(focus);
@@ -96,6 +103,7 @@ const Input = forwardRef<TextInput, Props>(({
   const inputContainerStyles = StyleSheet.flatten([
     {
       minHeight: sizes.inputHeight,
+      marginBottom: computedMarginBottom,
       borderRadius: sizes.inputRadius,
       borderWidth: isFocused ? 2 : sizes.inputBorder,
       borderColor,

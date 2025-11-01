@@ -12,8 +12,8 @@ import { useRegistrationStore } from '@/store/registration';
 import { supabase } from '@/utils/supabase';
 
 const schema = z.object({
-  termsAccepted: z.literal(true, { error: 'You must accept the Terms' }),
-  islamicPolicyAccepted: z.literal(true, { error: 'You must accept the Islamic Usage Policy' }),
+  terms_accepted: z.literal(true, { error: 'You must accept the Terms' }),
+  islamic_policy_accepted: z.literal(true, { error: 'You must accept the Islamic Usage Policy' }),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -35,12 +35,12 @@ export default function Step5() {
 
   const onSubmit = async (values: FormValues) => {
     setData(values);
-    const finalPayload = { ...data, ...values };
+    const payload = { ...data, ...values };
 
     // 1. Create user in auth
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email: finalPayload.email,
-      password: finalPayload.password,
+      email: payload.email,
+      password: payload.password,
     });
 
     if (signUpError) {
@@ -56,10 +56,13 @@ export default function Step5() {
     }
 
     // 3. Insert profile (must use the same userId!)
-    const { error: profileError } = await supabase.from("profiles").insert({ ...finalPayload, id: userId });
+    const { error } = await supabase.rpc('create_full_profile', {
+      p_user_id: userId,
+      p: payload
+    });
 
-    if (profileError) {
-      alert(profileError.message);
+    if (error) {
+      alert(error.message);
       return;
     }
 
@@ -67,7 +70,6 @@ export default function Step5() {
     reset();
     router.replace("/login");
   };
-
 
   return (
     <Block safe color={colors.background} >
@@ -99,7 +101,7 @@ export default function Step5() {
         <Block row flex={0} style={{ zIndex: 0 }}>
           <Controller
             control={control}
-            name="termsAccepted"
+            name="terms_accepted"
             render={({ field }) => (
               <Block row center>
                 <Checkbox
@@ -113,9 +115,9 @@ export default function Step5() {
           />
         </Block>
         <Block row center flex={0} style={{ zIndex: 0 }}>
-          {errors.termsAccepted?.message && (
+          {errors.terms_accepted?.message && (
             <Text color={colors.danger} marginTop={sizes.xs}>
-              {errors.termsAccepted.message}
+              {errors.terms_accepted.message}
             </Text>
           )}
         </Block>
@@ -124,7 +126,7 @@ export default function Step5() {
         <Block row flex={0} center style={{ zIndex: 0 }} >
           <Controller
             control={control}
-            name="islamicPolicyAccepted"
+            name="islamic_policy_accepted"
             render={({ field }) => (
               <Block row center>
                 <Checkbox
@@ -138,9 +140,9 @@ export default function Step5() {
           />
         </Block>
         <Block row center flex={0} style={{ zIndex: 0 }}>
-          {errors.islamicPolicyAccepted?.message && (
+          {errors.islamic_policy_accepted?.message && (
             <Text color={colors.danger} marginTop={sizes.xs}>
-              {errors.islamicPolicyAccepted.message}
+              {errors.islamic_policy_accepted.message}
             </Text>
           )}
         </Block>

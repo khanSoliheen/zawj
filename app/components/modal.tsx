@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Modal as RNModal, ViewStyle, Platform } from 'react-native';
 
-
 import { useData } from '@/hooks';
 
 import Block from './block';

@@ -91,7 +91,6 @@ export default function Home() {
       .select('*', { count: 'exact' })
       .order('id', { ascending: false })   // or created_at if available
       .range(start, end);
-
     if (error) { show('error', error.message); setLoading(false); return; }
 
     const page = Array.isArray(data) ? data : [];

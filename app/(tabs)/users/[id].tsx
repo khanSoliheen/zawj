@@ -19,20 +19,19 @@ const Profile = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   useEffect(() => {
-    async function getUserDetails() {
+    (async () => {
       if (!id) return;
       const { data, error } = await supabase
-        .from('profiles_card_v')
+        .from('v_profile_detail')
         .select('*')
-        .eq('id', id)
+        .eq('user_id', id)
         .single();
       if (error) {
         show("error", error.message)
       } else {
         setUserDetails(data);
       }
-    }
-    getUserDetails();
+    })();
   }, [show, id]);
 
   const nikahRequestHandler = async () => {
@@ -110,7 +109,7 @@ const Profile = () => {
               height={100}
               radius={50}
               marginBottom={sizes.sm}
-              source={assets.avatar1}
+              source={userDetails?.avatar_url ? { uri: userDetails.avatar_url } : assets.avatar1}
             />
             <Text h5 center white>
               {fullName}

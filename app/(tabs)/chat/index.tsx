@@ -62,10 +62,14 @@ const ChatList = () => {
             ? new Date(data.messages[0].created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             : '';
 
+          // Determine which profile to use (the other user, not the current user)
+          const otherUserProfile = data.user1 === userId ? data.user2_profile : data.user1_profile;
+          const profileData = Array.isArray(otherUserProfile) ? otherUserProfile[0] : otherUserProfile;
+
           setChats([
             {
               id: data.id,
-              name: `${data?.user1_profile?.[0]?.first_name || 'User'} ${data?.user1_profile?.[0]?.last_name || ''}`,
+              name: `${profileData?.first_name || 'User'} ${profileData?.last_name || ''}`,
               lastMessage,
               time,
               avatar: staticAvatar, // ✅ use static placeholder

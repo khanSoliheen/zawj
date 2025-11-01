@@ -43,24 +43,21 @@ const Profile = () => {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    async function getUserDetails() {
+    (async () => {
       if (!currentUser?.id) return;
       const { data, error } = await supabase
         .from('profiles_card_v')
         .select('*')
-        .eq('id', currentUser.id)
-        .single();
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
       if (error) {
         show("error", error.message);
-      } else {
+      } else if (data) {
         setProfile(data);
         setAvatarUrl(data?.avatar_url ?? null);
       }
-    }
-    getUserDetails();
+    })();
   }, [show, currentUser]);
-
-  const fullName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
 
   const pickAvatar = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -117,6 +114,8 @@ const Profile = () => {
       setUploading(false);
     }
   };
+
+  const fullName = `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
 
   return (
     <Block color={colors.background} safe marginTop={sizes.md}>

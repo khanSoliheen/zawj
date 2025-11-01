@@ -24,7 +24,7 @@ const Profile = () => {
       const { data, error } = await supabase
         .from('v_profile_detail')
         .select('*')
-        .eq('user_id', id)
+        .eq('id', id)
         .single();
       if (error) {
         show("error", error.message)

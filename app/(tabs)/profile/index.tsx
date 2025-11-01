@@ -46,9 +46,9 @@ const Profile = () => {
     (async () => {
       if (!currentUser?.id) return;
       const { data, error } = await supabase
-        .from('profiles_card_v')
+        .from('v_profile_detail')
         .select('*')
-        .eq('user_id', currentUser.id)
+        .eq('id', currentUser.id)
         .maybeSingle();
       if (error) {
         show("error", error.message);
